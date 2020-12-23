@@ -67,3 +67,20 @@ func UpdateBio(userID int, newBio string) {
 func UpdateAvatar(userID int, newAvatarURL string) {
 	DB.Exec("update users set avatar_url = ? where user_id = ?", newAvatarURL, userID)
 }
+
+// QueryMiniUserWithUserID 根据用户 ID 获得 MiniUser 对象，具有足够用于辨别用户的属性
+func QueryMiniUserWithUserID(userID int) (*MiniUser, error) {
+	if !CheckUserExist(userID) {
+		return nil, errors.New("no such user")
+	}
+
+	// 已确定 user 存在,因此 QueryFollowerNumber 和 Scan() 不用处理错误
+	user := new(MiniUser)
+	user.UserID = userID
+	user.FollowerNum, _ = QueryFollowerNumber(userID)
+
+	row := DB.QueryRow(`select user_name, avatar_url from users where user_id = ?`, userID)
+	row.Scan(&user.Username, &user.AvatarURL)
+
+	return user, nil
+}
