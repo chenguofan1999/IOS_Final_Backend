@@ -23,3 +23,13 @@ func CreateReplyTableIfNotExists() {
 	}
 	fmt.Println("Create comment table successed or it already exists")
 }
+
+func CheckReplyExist(replyID int) bool {
+	var temp int
+	row := DB.QueryRow("select reply_id from replys where reply_id = ?", replyID)
+	err := row.Scan(&temp)
+	if err != nil {
+		return false
+	}
+	return true
+}

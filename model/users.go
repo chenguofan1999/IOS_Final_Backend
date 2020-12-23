@@ -9,10 +9,10 @@ import (
 func CreateUserTableIfNotExists() {
 	sql := `CREATE TABLE IF NOT EXISTS users(
 		user_id INT NOT NULL AUTO_INCREMENT,
-		username VARCHAR(32) UNIQUE,
+		user_name VARCHAR(32) UNIQUE,
 		password VARCHAR(32),
-		bio VARCHAR(64) DEFAULT '',
-		avatar_url VARCHAR(128) DEFAULT '',
+		bio VARCHAR DEFAULT '',
+		avatar_url VARCHAR(256) DEFAULT '',
 		PRIMARY KEY (user_id)
 		)ENGINE=InnoDB DEFAULT CHARSET=utf8; `
 
@@ -28,7 +28,7 @@ func InsertUser(username string, password string) error {
 		return errors.New("Invalid string")
 	}
 
-	_, err := DB.Exec("insert INTO users(username,password) values(?,?)", username, password)
+	_, err := DB.Exec("insert INTO users(user_name,password) values(?,?)", username, password)
 	if err != nil {
 		fmt.Printf("Insert user failed,err:%v", err)
 		return errors.New("User exists")
@@ -39,7 +39,7 @@ func InsertUser(username string, password string) error {
 
 // QueryUserIDWithName 通过用户名查询用户 ID , error != nil 如果不存在
 func QueryUserIDWithName(username string) (int, error) {
-	row := DB.QueryRow("select user_id from users where username = ?", username)
+	row := DB.QueryRow("select user_id from users where user_name = ?", username)
 	var userID int
 	if err := row.Scan(&userID); err != nil {
 		return 0, errors.New("no such user")

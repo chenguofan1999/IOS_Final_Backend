@@ -23,3 +23,13 @@ func CreateContentTableIfNotExists() {
 		return
 	}
 }
+
+func CheckContentExist(contentID int) bool {
+	var temp int
+	row := DB.QueryRow("select content_id from contents where content_id = ?", contentID)
+	err := row.Scan(&temp)
+	if err != nil {
+		return false
+	}
+	return true
+}

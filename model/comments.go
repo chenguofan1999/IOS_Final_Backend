@@ -22,3 +22,13 @@ func CreateCommentTableIfNotExists() {
 		return
 	}
 }
+
+func CheckCommentExist(commentID int) bool {
+	var temp int
+	row := DB.QueryRow("select comment_id from comments where comment_id = ?", commentID)
+	err := row.Scan(&temp)
+	if err != nil {
+		return false
+	}
+	return true
+}
