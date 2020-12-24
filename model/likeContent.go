@@ -65,7 +65,7 @@ func DeleteLikeContent(userID int, contentID int) error {
 	return nil
 }
 
-func QueryContentLikeNumber(contentID int) (int, error) {
+func QueryLikeNumWithContentID(contentID int) (int, error) {
 	if !CheckContentExist(contentID) {
 		return 0, errors.New("no such content")
 	}

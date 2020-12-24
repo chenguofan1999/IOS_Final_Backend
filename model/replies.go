@@ -1,16 +1,27 @@
 package model
 
 import (
+	"errors"
 	"fmt"
 )
 
+func CheckReplyExist(replyID int) bool {
+	var temp int
+	row := DB.QueryRow("select reply_id from replies where reply_id = ?", replyID)
+	err := row.Scan(&temp)
+	if err != nil {
+		return false
+	}
+	return true
+}
+
 // CreateReplyTableIfNotExists Creates a Reply Table If Not Exists
 func CreateReplyTableIfNotExists() {
-	sql := `CREATE TABLE IF NOT EXISTS comments(
+	sql := `CREATE TABLE IF NOT EXISTS replies(
 		reply_id INT NOT NULL AUTO_INCREMENT,
 		user_id INT,
 		comment_id INT,
-		reply_text VARCHAR,
+		reply_text VARCHAR(255),
 		create_time BIGINT,
 		PRIMARY KEY (reply_id),
 		FOREIGN KEY (user_id) REFERENCES users(user_id) ON UPDATE CASCADE,
@@ -18,18 +29,113 @@ func CreateReplyTableIfNotExists() {
 		)ENGINE=InnoDB DEFAULT CHARSET=utf8; `
 
 	if _, err := DB.Exec(sql); err != nil {
-		fmt.Println("Create comment table failed", err)
+		fmt.Println("Create replies table failed", err)
 		return
 	}
-	fmt.Println("Create comment table successed or it already exists")
 }
 
-func CheckReplyExist(replyID int) bool {
-	var temp int
-	row := DB.QueryRow("select reply_id from replys where reply_id = ?", replyID)
-	err := row.Scan(&temp)
-	if err != nil {
-		return false
+// QueryReplyWithReplyID 根据 replyID 查询并构造 Reply 结构
+func QueryReplyWithReplyID(replyID int) *Reply {
+	if !CheckReplyExist(replyID) {
+		return nil
 	}
-	return true
+
+	// reply 确认存在
+	reply := new(Reply)
+	reply.ReplyID = replyID
+	var userID int
+
+	row := DB.QueryRow(`select user_id, comment_id, reply_text, create_time
+	from replies where reply_id = ?`, replyID)
+	err := row.Scan(&userID, &reply.CommentID, &reply.Text, &reply.Time)
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+
+	reply.LikeNum, _ = QueryLikeNumWithReplyID(replyID)
+	user := QueryMiniUserWithUserID(userID)
+	if user != nil {
+		reply.User = user
+	}
+
+	return reply
+}
+
+// QueryRepliesWithCommentID 查询一条 comment 的所有回复, 如果没有则返回空切片
+func QueryRepliesWithCommentID(commentID int) []Reply {
+	if !CheckCommentExist(commentID) {
+		return []Reply{}
+	}
+
+	replies := make([]Reply, 0)
+	rows, err := DB.Query(`select reply_id from replies where comment_id = ? order by reply_id desc`, commentID)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	for rows.Next() {
+		var replyID int
+		rows.Scan(&replyID)
+
+		reply := QueryReplyWithReplyID(replyID)
+		if reply != nil {
+			replies = append(replies, *reply)
+		}
+	}
+	return replies
+}
+
+func QueryReplyNumWithCommentID(commentID int) (int, error) {
+	if !CheckCommentExist(commentID) {
+		return 0, errors.New("no such comment")
+	}
+
+	var num int
+	row := DB.QueryRow(`select count(1) from (select 1 from replies where comment_id = ?) as X`, commentID)
+	err := row.Scan(&num)
+
+	// 如果没有记录, Scan() 会返回错误, 为正常情况
+	if err != nil {
+		return 0, nil
+	}
+
+	return num, nil
+}
+
+// InsertReply 插入一条回复，用户、评论不存在或插入错误时返回错误
+func InsertReply(userID int, commentID int, text string, time int64) error {
+	// 检查用户存在
+	if !CheckUserExist(userID) {
+		return errors.New("no such user")
+	}
+
+	// 检查评论存在
+	if !CheckCommentExist(commentID) {
+		return errors.New("no such comment")
+	}
+
+	// 执行
+	_, err := DB.Exec(`insert into replies(user_id, comment_id, reply_text, create_time)
+	values(?,?,?,?)`, userID, commentID, text, time)
+	if err != nil {
+		return errors.New("insert reply failed")
+	}
+
+	return nil
+}
+
+// DeleteReplyWithReplyID 删除一条回复，如果该回复不存在返回错误
+func DeleteReplyWithReplyID(replyID int) error {
+	if !CheckReplyExist(replyID) {
+		return errors.New("no such reply")
+	}
+
+	// 已知 reply 存在，不必检查 result
+	_, err := DB.Exec(`delete from replies where reply_id = ?`, replyID)
+	if err != nil {
+		return errors.New("delete reply failed")
+	}
+
+	return nil
 }

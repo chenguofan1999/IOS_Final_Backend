@@ -11,10 +11,10 @@ func CreateUserTableIfNotExists() {
 		user_id INT NOT NULL AUTO_INCREMENT,
 		user_name VARCHAR(32) UNIQUE,
 		password VARCHAR(32),
-		bio VARCHAR DEFAULT '',
+		bio VARCHAR(128) DEFAULT '',
 		avatar_url VARCHAR(256) DEFAULT '',
 		PRIMARY KEY (user_id)
-		)ENGINE=InnoDB DEFAULT CHARSET=utf8; `
+		)ENGINE=InnoDB DEFAULT CHARSET=utf8;`
 
 	if _, err := DB.Exec(sql); err != nil {
 		fmt.Println("create table failed", err)
@@ -68,10 +68,10 @@ func UpdateAvatar(userID int, newAvatarURL string) {
 	DB.Exec("update users set avatar_url = ? where user_id = ?", newAvatarURL, userID)
 }
 
-// QueryMiniUserWithUserID 根据用户 ID 获得 MiniUser 对象，具有足够用于辨别用户的属性
-func QueryMiniUserWithUserID(userID int) (*MiniUser, error) {
+// QueryMiniUserWithUserID 根据用户 ID 获得 MiniUser 对象，具有足够用于辨别用户的属性，返回 nil 如果 user 不存在
+func QueryMiniUserWithUserID(userID int) *MiniUser {
 	if !CheckUserExist(userID) {
-		return nil, errors.New("no such user")
+		return nil
 	}
 
 	// 已确定 user 存在,因此 QueryFollowerNumber 和 Scan() 不用处理错误
@@ -82,5 +82,5 @@ func QueryMiniUserWithUserID(userID int) (*MiniUser, error) {
 	row := DB.QueryRow(`select user_name, avatar_url from users where user_id = ?`, userID)
 	row.Scan(&user.Username, &user.AvatarURL)
 
-	return user, nil
+	return user
 }

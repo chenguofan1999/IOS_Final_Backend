@@ -12,4 +12,5 @@ func init() {
 	CreateLikeReplyTableIfNotExists()
 	CreateUserTagsTableIfNotExists()
 	CreateContentTagsTableIfNotExists()
+	CreateHistoryTableIfNotExists()
 }

@@ -8,7 +8,7 @@ import (
 func CreateUserTagsTableIfNotExists() {
 	sql := `CREATE TABLE IF NOT EXISTS user_tags(
 		user_id INT,
-		tag_name VARCHAR,
+		tag_name VARCHAR(32),
 		PRIMARY KEY (user_id, tag_name),
 		FOREIGN KEY (user_id) REFERENCES users(user_id)
 		)ENGINE=InnoDB DEFAULT CHARSET=utf8; `
@@ -61,7 +61,7 @@ func QueryTagsWithUserID(userID int) ([]string, error) {
 	}
 
 	tags := make([]string, 0)
-	rows, _ := DB.Query(`select tag_name from users join user_tags where users.user_id = ?`, userID)
+	rows, _ := DB.Query(`select tag_name from user_tags where user_id = ?`, userID)
 
 	for rows.Next() {
 		var tag string

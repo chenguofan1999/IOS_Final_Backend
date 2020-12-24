@@ -50,7 +50,7 @@ func InsertFollow(followerID int, followedID int) error {
 	following, err := QueryHasFollowed(followerID, followedID)
 	if err != nil {
 		return err
-	} else if following == false {
+	} else if following == true {
 		return errors.New("already following")
 	}
 
@@ -84,7 +84,7 @@ func DeleteFollow(followerID int, followedID int) error {
 }
 
 // QueryFollowersWithName : 根据userID查询TA的关注者
-func QueryFollowersWithName(userID int) ([]MiniUser, error) {
+func QueryFollowersWithUserID(userID int) ([]MiniUser, error) {
 	if !CheckUserExist(userID) {
 		return []MiniUser{}, errors.New("no such user")
 	}
@@ -112,7 +112,7 @@ func QueryFollowersWithName(userID int) ([]MiniUser, error) {
 }
 
 // QueryFollowingWithName : 根据userID查询TA关注的人
-func QueryFollowingWithName(userID int) ([]MiniUser, error) {
+func QueryFollowingWithUserID(userID int) ([]MiniUser, error) {
 	if !CheckUserExist(userID) {
 		return []MiniUser{}, errors.New("no such user")
 	}

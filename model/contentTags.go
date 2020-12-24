@@ -8,7 +8,7 @@ import (
 func CreateContentTagsTableIfNotExists() {
 	sql := `CREATE TABLE IF NOT EXISTS content_tags(
 		content_id INT,
-		tag_name VARCHAR,
+		tag_name VARCHAR(32),
 		PRIMARY KEY (content_id, tag_name),
 		FOREIGN KEY (content_id) REFERENCES contents(content_id)
 		)ENGINE=InnoDB DEFAULT CHARSET=utf8; `
@@ -53,8 +53,8 @@ func DeleteContentTag(contentID int, tagName string) error {
 	return nil
 }
 
-// QueryContentsWithTag 查询具有某个 tag 的所有内容，如果没有就为空
-func QueryContentsWithTag(tagName string) []BriefContent {
+// QueryBriefContentsWithTag 查询具有某个 tag 的所有内容(Brief)，如果没有就为空
+func QueryBriefContentsWithTag(tagName string) []BriefContent {
 	contents := make([]BriefContent, 0)
 
 	rows, _ := DB.Query(`select content_id from contents,content_tags where tag_name = ?`, tagName)
@@ -63,8 +63,30 @@ func QueryContentsWithTag(tagName string) []BriefContent {
 		var contentID int
 		rows.Scan(&contentID)
 
-		content, _ := QueryBriefContentWithContentID(contentID)
-		contents = append(contents, *content)
+		content := QueryBriefContentWithContentID(contentID)
+		if content != nil {
+			contents = append(contents, *content)
+		}
+
 	}
 	return contents
+}
+
+// QueryTagsWithContentID 根据内容 ID 查询其相关的 tag，返回错误如果内容不存在
+func QueryTagsWithContentID(contentID int) ([]string, error) {
+	// 检查内容存在
+	if !CheckContentExist(contentID) {
+		return []string{}, errors.New("no such content")
+	}
+
+	tags := make([]string, 0)
+	rows, _ := DB.Query(`select tag_name from content_tags where content_id = ?`, contentID)
+
+	for rows.Next() {
+		var tag string
+		rows.Scan(&tag)
+		tags = append(tags, tag)
+	}
+
+	return tags, nil
 }

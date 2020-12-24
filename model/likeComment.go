@@ -65,7 +65,7 @@ func DeleteLikeComment(userID int, commentID int) error {
 	return nil
 }
 
-func QueryCommentLikeNumber(commentID int) (int, error) {
+func QueryLikeNumWithCommentID(commentID int) (int, error) {
 	if !CheckCommentExist(commentID) {
 		return 0, errors.New("no such comment")
 	}
