@@ -65,6 +65,7 @@ func DeleteLikeContent(userID int, contentID int) error {
 	return nil
 }
 
+// QueryLikeNumWithContentID 获取一条内容被赞的数目
 func QueryLikeNumWithContentID(contentID int) (int, error) {
 	if !CheckContentExist(contentID) {
 		return 0, errors.New("no such content")
@@ -72,12 +73,23 @@ func QueryLikeNumWithContentID(contentID int) (int, error) {
 
 	var num int
 	row := DB.QueryRow(`select count(1) from (select 1 from like_content where content_id = ?) as X`, contentID)
-	err := row.Scan(&num)
 
-	// 如果没有 Scan() 会返回 err
-	if err != nil {
-		return 0, nil
+	row.Scan(&num)
+	return num, nil
+}
+
+// QueryLikeNumberWithUserID 获取用户(发布的内容)被赞的总数, 返回错误如果用户不存在
+func QueryLikeNumberWithUserID(userID int) (int, error) {
+	if !CheckUserExist(userID) {
+		return 0, errors.New("no such user")
 	}
 
+	var num int
+	row := DB.QueryRow(`select count(1) from  (select 1 
+											   from like_content join contents using (content_id)
+											   where contents.user_id = ?) as X`, userID)
+
+	row.Scan(&num)
 	return num, nil
+
 }

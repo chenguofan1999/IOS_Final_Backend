@@ -21,7 +21,7 @@ func CreateFollowTableIfNotExists() {
 	}
 }
 
-// QueryHasFollowed 查询 followerID 是否 follow 了 followedID
+// QueryHasFollowed 查询是否已经关注，返回错误如果任一用户不存在
 func QueryHasFollowed(followerID int, followedID int) (bool, error) {
 	// 检查用户存在
 	if !CheckUserExist(followedID) || !CheckUserExist(followedID) {
@@ -83,7 +83,7 @@ func DeleteFollow(followerID int, followedID int) error {
 	return nil
 }
 
-// QueryFollowersWithName : 根据userID查询TA的关注者
+// QueryFollowersWithUserID : 根据userID查询TA的关注者, 返回错误如果用户不存在或请求失败
 func QueryFollowersWithUserID(userID int) ([]MiniUser, error) {
 	if !CheckUserExist(userID) {
 		return []MiniUser{}, errors.New("no such user")
@@ -102,7 +102,7 @@ func QueryFollowersWithUserID(userID int) ([]MiniUser, error) {
 		followerIDs.Scan(&user.UserID, &user.Username, &user.AvatarURL)
 
 		// 查询这个用户的关注者数
-		num, _ := QueryFollowerNumber(user.UserID)
+		num, _ := QueryFollowerNumWithUserID(user.UserID)
 		user.FollowerNum = num
 
 		followers = append(followers, user)
@@ -111,7 +111,7 @@ func QueryFollowersWithUserID(userID int) ([]MiniUser, error) {
 	return followers, nil
 }
 
-// QueryFollowingWithName : 根据userID查询TA关注的人
+// QueryFollowingWithUserID : 根据userID查询TA关注的人, 返回错误如果用户不存在或请求失败
 func QueryFollowingWithUserID(userID int) ([]MiniUser, error) {
 	if !CheckUserExist(userID) {
 		return []MiniUser{}, errors.New("no such user")
@@ -130,7 +130,7 @@ func QueryFollowingWithUserID(userID int) ([]MiniUser, error) {
 		followingIDs.Scan(&user.UserID, &user.Username, &user.AvatarURL)
 
 		// 查询这个用户的关注者数
-		num, _ := QueryFollowerNumber(user.UserID)
+		num, _ := QueryFollowerNumWithUserID(user.UserID)
 		user.FollowerNum = num
 
 		following = append(following, user)
@@ -139,14 +139,32 @@ func QueryFollowingWithUserID(userID int) ([]MiniUser, error) {
 	return following, nil
 }
 
-// QueryFollowerNumber 查询用户的关注者数目，返回 err != nil 如果用户不存在
-func QueryFollowerNumber(userID int) (int, error) {
+// QueryFollowerNumWithUserID 查询用户的关注者数目，返回 err != nil 如果用户不存在
+func QueryFollowerNumWithUserID(userID int) (int, error) {
 	if !CheckUserExist(userID) {
 		return 0, errors.New("no such user")
 	}
 
 	var num int
 	row := DB.QueryRow(`select count(1) from (select 1 from follow where followed_id = ?) as X`, userID)
+	err := row.Scan(&num)
+
+	// 如果没有 Scan() 会返回 err
+	if err != nil {
+		return 0, nil
+	}
+
+	return num, nil
+}
+
+// QueryFollowingNumWithUserID 查询关注的用户数目，返回 err != nil 如果用户不存在
+func QueryFollowingNumWithUserID(userID int) (int, error) {
+	if !CheckUserExist(userID) {
+		return 0, errors.New("no such user")
+	}
+
+	var num int
+	row := DB.QueryRow(`select count(1) from (select 1 from follow where follower_id = ?) as X`, userID)
 	err := row.Scan(&num)
 
 	// 如果没有 Scan() 会返回 err

@@ -1,8 +1,10 @@
 package model
 
 import (
+	"database/sql"
 	"errors"
 	"fmt"
+	"time"
 )
 
 // CreateContentTableIfNotExists Creates a Contents Table If Not Exists
@@ -25,6 +27,7 @@ func CreateContentTableIfNotExists() {
 	}
 }
 
+// CheckContentExist 检查 contentID 标识的 content 是否存在
 func CheckContentExist(contentID int) bool {
 	var temp int
 	row := DB.QueryRow("select content_id from contents where content_id = ?", contentID)
@@ -81,61 +84,47 @@ func QueryBriefContentWithContentID(contentID int) *BriefContent {
 	return content
 }
 
-// QueryBriefContentsWithUserID 查询某个用户的所有内容(Brief),如果没有则返回空切片。不做错误处理。
-func QueryBriefContentsWithUserID(userID int) []BriefContent {
-	if !CheckUserExist(userID) {
-		return []BriefContent{}
+// QueryContents 是查询内容集合的统一接口
+// mode: public / user / tag / followBy
+// specifier: 当模式为 user / tag / followBy 时，specifier 分别表示用户名 / tag名 / 用户名
+// orderBy: view_num / create_time
+// order : asc / desc
+// num: 条数
+func QueryContents(mode string, specifier interface{}, orderBy string, order string, num int) []BriefContent {
+
+	fmt.Println("Querying contents...")
+	fmt.Println("mode: ", mode)
+	fmt.Println("specifier: ", specifier)
+	fmt.Println("orderBy: ", orderBy)
+	fmt.Println("order: ", order)
+	fmt.Println("num: ", num)
+
+	// 创建视图 view_num
+	DB.Exec(`create view view_num as
+	select content_id, count(1) as view_num from contents join history using (content_id) group by content_id;`)
+
+	var rows *sql.Rows
+	var err error
+
+	switch mode {
+	case "public":
+		rows, err = DB.Query(`select content_id from contents natural join view_num order by `+orderBy+` `+order+` limit ?`, num)
+	case "user":
+		rows, err = DB.Query(`select content_id from contents natural join view_num 
+		where user_id = ? order by `+orderBy+` `+order+` limit ?`, specifier, num)
+	case "tag":
+		rows, err = DB.Query(`select content_id from content_tags natural join view_num 
+		where tag_name = ? order by `+orderBy+` `+order+` limit ?`, specifier, num)
+	case "follow":
+		rows, err = DB.Query(`select content_id from contents natural join view_num
+		join follow on (user_id = followed_id and follower_id = ?) order by `+orderBy+` `+order+` limit ?`, specifier, num)
 	}
 
 	contents := make([]BriefContent, 0)
-	rows, err := DB.Query(`select content_id from contents where user_id = ? order by content_id desc`, userID)
+
 	if err != nil {
 		fmt.Println(err)
-	}
-
-	for rows.Next() {
-		var contentID int
-		rows.Scan(&contentID)
-
-		content := QueryBriefContentWithContentID(contentID)
-		if content != nil {
-			contents = append(contents, *content)
-		}
-	}
-	return contents
-}
-
-// QueryBriefContentsFollowing 查询某个用户关注的用户的所有内容(Brief),如果用户不存在或用户没有内容没有则返回空切片。不做错误处理。
-func QueryBriefContentsFollowing(userID int) []BriefContent {
-	if !CheckUserExist(userID) {
-		return []BriefContent{}
-	}
-
-	contents := make([]BriefContent, 0)
-	rows, err := DB.Query(`select content_id from contents, follow
-		where followed_id = user_id and follower_id = ?`, userID)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	for rows.Next() {
-		var contentID int
-		rows.Scan(&contentID)
-
-		content := QueryBriefContentWithContentID(contentID)
-		if content != nil {
-			contents = append(contents, *content)
-		}
-	}
-	return contents
-}
-
-// QueryBriefContentsPublic 获取所有公共内容
-func QueryBriefContentsPublic() []BriefContent {
-	contents := make([]BriefContent, 0)
-	rows, err := DB.Query(`select content_id from contents`)
-	if err != nil {
-		fmt.Println(err)
+		return contents
 	}
 
 	for rows.Next() {
@@ -148,13 +137,16 @@ func QueryBriefContentsPublic() []BriefContent {
 		}
 	}
 
+	// 撤销视图 view_num
+	DB.Exec(`drop view view_num;`)
+
 	return contents
 }
 
-// QueryDetailedContent 用户 ID 为 currentUserID 的用户请求内容 ID 为 contentID 的内容
-// currentUserID 用于获知是否已点赞, 以及记录浏览历史
-// time用于记录浏览历史
-func QueryDetailedContent(currentUserID int, contentID int, time int64) *DetailedContent {
+// QueryDetailedContent 用户 ID 为 currentUserID 的用户请求内容 ID 为 contentID 的内容.
+// 参数：
+// 1. currentUserID 用于获知是否已点赞, 以及记录浏览历史.
+func QueryDetailedContent(currentUserID int, contentID int) *DetailedContent {
 	if !CheckUserExist(currentUserID) || !CheckContentExist(contentID) {
 		return nil
 	}
@@ -177,7 +169,7 @@ func QueryDetailedContent(currentUserID int, contentID int, time int64) *Detaile
 	content.Tags, _ = QueryTagsWithContentID(contentID)
 
 	// 假设获取内容详细信息总伴随着用户的查看内容，因此对此做一条记录
-	InsertHistory(currentUserID, contentID, time)
+	InsertHistory(currentUserID, contentID, time.Now().Unix())
 
 	return content
 }

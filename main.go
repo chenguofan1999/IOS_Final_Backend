@@ -3,13 +3,14 @@ package main
 import (
 	"fmt"
 	_ "ios/model"
+	"ios/routes"
 	// "ios/routes"
 )
 
 func main() {
-	// router := routes.InitRouter()
-	// router.Run(":5009")
-	test1()
+	router := routes.InitRouter()
+	router.Run(":5009")
+	// test1()
 }
 
 func test1() {
@@ -120,6 +121,26 @@ func test1() {
 	// fmt.Println(model.QueryFollowersWithUserID(2))
 	// fmt.Println(model.QueryFollowingWithUserID(1))
 	// fmt.Println(model.QueryFollowingWithUserID(2))
+
+	//// ==========================================================================================================
+	// err = model.InsertContentTag(1, "politics")
+	// checkError(err)
+	// err = model.InsertContentTag(1, "loser")
+	// checkError(err)
+	// err = model.InsertContentTag(1, "loser")
+	// checkError(err)
+	// err = model.InsertUserTag(1, "politics")
+	// checkError(err)
+	// err = model.InsertUserTag(1, "loser")
+	// checkError(err)
+	// err = model.InsertUserTag(1, "loser")
+	// checkError(err)
+
+	// fmt.Println(model.QueryTagsWithContentID(1))
+	// fmt.Println(model.QueryTagsWithContentID(2))
+	// fmt.Println(model.QueryTagsWithUserID(1))
+	// fmt.Println(model.QueryTagsWithUserID(2))
+
 }
 
 func checkError(err error) {

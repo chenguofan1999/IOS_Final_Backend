@@ -22,7 +22,18 @@ func CreateUserTableIfNotExists() {
 	}
 }
 
-// InsertUser 插入一个用户，除了 username 和 password 以外都是默认值
+// CheckUserExist 检查 followerID 用户存在
+func CheckUserExist(userID int) bool {
+	var temp int
+	row := DB.QueryRow("select user_id from users where user_id = ?", userID)
+	err := row.Scan(&temp)
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+// InsertUser 插入一个用户，除了 username 和 password 以外都是默认值. 返回错误如果输入不合法，或用户名已被使用
 func InsertUser(username string, password string) error {
 	if username == "" || password == "" {
 		return errors.New("Invalid string")
@@ -37,7 +48,7 @@ func InsertUser(username string, password string) error {
 	return nil
 }
 
-// QueryUserIDWithName 通过用户名查询用户 ID , error != nil 如果不存在
+// QueryUserIDWithName 通过用户名查询用户 ID , 返回错误如果用户不存在
 func QueryUserIDWithName(username string) (int, error) {
 	row := DB.QueryRow("select user_id from users where user_name = ?", username)
 	var userID int
@@ -47,18 +58,17 @@ func QueryUserIDWithName(username string) (int, error) {
 	return userID, nil
 }
 
-// CheckUserExist 检查 followerID 用户存在
-func CheckUserExist(userID int) bool {
-	var temp int
-	row := DB.QueryRow("select user_id from users where user_id = ?", userID)
-	err := row.Scan(&temp)
-	if err != nil {
-		return false
+// QueryPasswordWithName 通过用户名查询用户密码, 返回错误如果用户不存在
+func QueryPasswordWithName(username string) (string, error) {
+	var pwd string
+	row := DB.QueryRow("select password from users where user_name = ?", username)
+	if err := row.Scan(&pwd); err != nil {
+		return "", errors.New("no such user")
 	}
-	return true
+	return pwd, nil
 }
 
-// UpdateBio 更新指定用户 ID 的用户的简介, 返回 err 如果用户不存在
+// UpdateBio 更新指定用户 ID 的用户的简介, 返回错误如果用户不存在
 func UpdateBio(userID int, newBio string) {
 	DB.Exec("update users set bio = ? where user_id = ?", newBio, userID)
 }
@@ -77,10 +87,30 @@ func QueryMiniUserWithUserID(userID int) *MiniUser {
 	// 已确定 user 存在,因此 QueryFollowerNumber 和 Scan() 不用处理错误
 	user := new(MiniUser)
 	user.UserID = userID
-	user.FollowerNum, _ = QueryFollowerNumber(userID)
+	user.FollowerNum, _ = QueryFollowerNumWithUserID(userID)
 
 	row := DB.QueryRow(`select user_name, avatar_url from users where user_id = ?`, userID)
 	row.Scan(&user.Username, &user.AvatarURL)
 
 	return user
+}
+
+// QueryDetailedUser 查询用户的详细信息，currentUserID 是查询者的 ID, userID 是被查询者的 ID，返回 nil 如果 user 不存在
+func QueryDetailedUser(currentUserID int, userID int) *DetailedUser {
+	if !CheckUserExist(userID) || !CheckUserExist(currentUserID) {
+		return nil
+	}
+
+	user := new(DetailedUser)
+	user.UserID = userID
+	user.FollowerNum, _ = QueryFollowerNumWithUserID(userID)
+	user.FollowingNum, _ = QueryFollowingNumWithUserID(userID)
+	user.LikeNum, _ = QueryLikeNumberWithUserID(userID)
+	user.FollowedByMe, _ = QueryHasFollowed(currentUserID, userID)
+
+	row := DB.QueryRow(`select user_name, avatar_url, bio from users where user_id = ?`, userID)
+	row.Scan(&user.Username, &user.AvatarURL, &user.Bio)
+
+	return user
+
 }
