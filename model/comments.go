@@ -3,6 +3,7 @@ package model
 import (
 	"errors"
 	"fmt"
+	"time"
 )
 
 // CreateCommentTableIfNotExists Creates a Contents Table If Not Exists
@@ -35,7 +36,7 @@ func CheckCommentExist(commentID int) bool {
 }
 
 // InsertComment 插入一条评论，用户、内容不存在或插入错误时返回错误
-func InsertComment(userID int, contentID int, text string, time int64) error {
+func InsertComment(userID int, contentID int, text string) error {
 	// 检查用户存在
 	if !CheckUserExist(userID) {
 		return errors.New("no such user")
@@ -48,7 +49,7 @@ func InsertComment(userID int, contentID int, text string, time int64) error {
 
 	// 执行
 	_, err := DB.Exec(`insert into comments(user_id,content_id,comment_text,create_time)
-		values(?,?,?,?)`, userID, contentID, text, time)
+		values(?,?,?,?)`, userID, contentID, text, time.Now().Unix())
 	if err != nil {
 		return errors.New("insert comment failed")
 	}
@@ -57,7 +58,7 @@ func InsertComment(userID int, contentID int, text string, time int64) error {
 }
 
 // QueryCommentWithCommentID 根据 commentID 查询并构造 Comment 结构
-func QueryCommentWithCommentID(commentID int) *Comment {
+func QueryCommentWithCommentID(currentUserID int, commentID int) *Comment {
 	if !CheckCommentExist(commentID) {
 		return nil
 	}
@@ -76,6 +77,7 @@ func QueryCommentWithCommentID(commentID int) *Comment {
 
 	comment.LikeNum, _ = QueryLikeNumWithCommentID(commentID)
 	comment.ReplyNum, _ = QueryReplyNumWithCommentID(commentID)
+	comment.Liked, _ = QueryHasLikedComment(currentUserID, commentID)
 
 	user := QueryMiniUserWithUserID(userID)
 	if user != nil {
@@ -103,23 +105,27 @@ func QueryCommentNumWithContentID(contentID int) (int, error) {
 	return num, nil
 }
 
-// QueryCommentsWithContentID 根据 contentID 查询对应内容的所有评论. 如果 content 不存在或没有评论则返回空切片.
-func QueryCommentsWithContentID(contentID int) []Comment {
+// QueryComments 根据 contentID 查询对应内容的所有评论. 如果 content 不存在或没有评论则返回空切片.
+func QueryComments(currentUserID int, contentID int, orderBy string, order string) []Comment {
 	if !CheckContentExist(contentID) {
 		return []Comment{}
 	}
 
 	comments := make([]Comment, 0)
-	rows, err := DB.Query(`select comment_id from comments where content_id = ? order by comment_id desc`, contentID)
+	rows, err := DB.Query(`select comment_id from comments natural join 
+		(select comment_id, count(1) as like_num 
+		from like_comment group by comment_id) as X 
+		where content_id = ? order by `+orderBy+` `+order, contentID)
 	if err != nil {
 		fmt.Println(err)
+		return comments
 	}
 
 	for rows.Next() {
 		var commentID int
 		rows.Scan(&commentID)
 
-		comment := QueryCommentWithCommentID(commentID)
+		comment := QueryCommentWithCommentID(currentUserID, commentID)
 		if comment != nil {
 			comments = append(comments, *comment)
 		}
@@ -127,16 +133,21 @@ func QueryCommentsWithContentID(contentID int) []Comment {
 	return comments
 }
 
-// DeleteCommentWithCommentID 删除一条评论，返回错误如果该评论不存在
-func DeleteCommentWithCommentID(commentID int) error {
+// DeleteCommentWithCommentID 删除一条评论，返回错误如果该评论不存在, 或用户无权限删除
+func DeleteCommentWithCommentID(userID int, commentID int) error {
 	if !CheckCommentExist(commentID) {
 		return errors.New("no such comment")
 	}
 
-	// 评论存在，因此不必检查 result
-	_, err := DB.Exec(`delete from comments where comment_id = ?`, commentID)
+	// 评论存在，因此 0 row affected 代表评论的发出者不是此用户
+	result, err := DB.Exec(`delete from comments where user_id = ? and comment_id = ?`, userID, commentID)
 	if err != nil {
 		return errors.New("delete comment failed")
+	}
+
+	rowsAffected, _ := result.RowsAffected()
+	if rowsAffected == 0 {
+		return errors.New("no access")
 	}
 
 	return nil

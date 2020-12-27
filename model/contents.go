@@ -39,14 +39,14 @@ func CheckContentExist(contentID int) bool {
 }
 
 // InsertContent 插入一条 Content 记录，用户不存在或插入错误时返回错误
-func InsertContent(title string, description string, coverURL string, videoURL string, time int64, userID int) error {
+func InsertContent(title string, description string, coverURL string, videoURL string, userID int) error {
 	// 检查用户存在
 	if !CheckUserExist(userID) {
 		return errors.New("no such user")
 	}
 
 	_, err := DB.Exec(`insert into contents(user_id,title,description,create_time,cover_url,video_url)
-		values (?,?,?,?,?,?)`, userID, title, description, time, coverURL, videoURL)
+		values (?,?,?,?,?,?)`, userID, title, description, time.Now().Unix(), coverURL, videoURL)
 	if err != nil {
 		fmt.Println(err)
 		return errors.New("insert content failed")

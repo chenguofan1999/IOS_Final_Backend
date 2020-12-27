@@ -19,7 +19,7 @@ func CreateUserTagsTableIfNotExists() {
 	}
 }
 
-// InsertUserTag 为一位用户增加 Tag, 返回错误如果用户不存在
+// InsertUserTag 为一位用户增加 Tag, 返回错误如果用户不存在，或该用户已有该 Tag
 func InsertUserTag(userID int, tagName string) error {
 	// 检查用户存在
 	if !CheckUserExist(userID) {

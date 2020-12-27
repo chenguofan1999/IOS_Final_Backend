@@ -7,4 +7,5 @@ type Reply struct {
 	Time      int64     `json:"createTime"`
 	LikeNum   int       `json:"likeNum"`
 	User      *MiniUser `json:"user"`
+	Liked     bool      `json:"liked"`
 }

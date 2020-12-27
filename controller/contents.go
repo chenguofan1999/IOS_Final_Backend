@@ -14,6 +14,7 @@ import (
 // 2. user : 获取指定用户的内容 (user = {userName})
 // 3. follow : 当前用户关注的所有用户的内容 (follow = true)
 // 4. self : 当前用户自己发的内容 (self = true)
+// 5. 如果以上参数都没有，则为请求不经过筛选的公共内容
 // 以下参数与上面的参数兼容
 // 1. orderBy : viewNum / time ，默认 time
 // 2. order : asc / desc ，默认 desc

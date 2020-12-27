@@ -8,4 +8,5 @@ type Comment struct {
 	LikeNum   int       `json:"likeNum"`
 	ReplyNum  int       `json:"replyNum"`
 	User      *MiniUser `json:"user"`
+	Liked     bool      `json:"liked"`
 }

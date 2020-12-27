@@ -20,6 +20,7 @@ func CreateLikeCommentTableIfNotExists() {
 	}
 }
 
+// QueryHasLikedComment 查询是否已经喜欢评论，返回错误如果用户不存在或评论不存在
 func QueryHasLikedComment(userID int, commentID int) (bool, error) {
 	// 确认用户存在
 	if !CheckUserExist(userID) {

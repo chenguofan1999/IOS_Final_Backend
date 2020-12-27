@@ -3,6 +3,7 @@ package model
 import (
 	"errors"
 	"fmt"
+	"time"
 )
 
 func CheckReplyExist(replyID int) bool {
@@ -35,7 +36,7 @@ func CreateReplyTableIfNotExists() {
 }
 
 // QueryReplyWithReplyID 根据 replyID 查询并构造 Reply 结构
-func QueryReplyWithReplyID(replyID int) *Reply {
+func QueryReplyWithReplyID(currentUserID int, replyID int) *Reply {
 	if !CheckReplyExist(replyID) {
 		return nil
 	}
@@ -54,6 +55,7 @@ func QueryReplyWithReplyID(replyID int) *Reply {
 	}
 
 	reply.LikeNum, _ = QueryLikeNumWithReplyID(replyID)
+	reply.Liked, _ = QueryHasLikedReply(currentUserID, replyID)
 	user := QueryMiniUserWithUserID(userID)
 	if user != nil {
 		reply.User = user
@@ -63,13 +65,17 @@ func QueryReplyWithReplyID(replyID int) *Reply {
 }
 
 // QueryRepliesWithCommentID 查询一条 comment 的所有回复, 如果没有则返回空切片
-func QueryRepliesWithCommentID(commentID int) []Reply {
+func QueryReplies(currentUserID int, commentID int, orderBy string, order string) []Reply {
 	if !CheckCommentExist(commentID) {
 		return []Reply{}
 	}
 
 	replies := make([]Reply, 0)
-	rows, err := DB.Query(`select reply_id from replies where comment_id = ? order by reply_id desc`, commentID)
+	rows, err := DB.Query(`select reply_id from replies natural join
+		(select reply_id, count(1) as like_num
+		from like_reply group by reply_id) as X
+		where comment_id = ? order by `+orderBy+` `+order, commentID)
+
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -78,7 +84,7 @@ func QueryRepliesWithCommentID(commentID int) []Reply {
 		var replyID int
 		rows.Scan(&replyID)
 
-		reply := QueryReplyWithReplyID(replyID)
+		reply := QueryReplyWithReplyID(currentUserID, replyID)
 		if reply != nil {
 			replies = append(replies, *reply)
 		}
@@ -86,6 +92,7 @@ func QueryRepliesWithCommentID(commentID int) []Reply {
 	return replies
 }
 
+// QueryReplyNumWithCommentID 查询评论的回复数，返回错误如果评论不存在
 func QueryReplyNumWithCommentID(commentID int) (int, error) {
 	if !CheckCommentExist(commentID) {
 		return 0, errors.New("no such comment")
@@ -104,7 +111,7 @@ func QueryReplyNumWithCommentID(commentID int) (int, error) {
 }
 
 // InsertReply 插入一条回复，用户、评论不存在或插入错误时返回错误
-func InsertReply(userID int, commentID int, text string, time int64) error {
+func InsertReply(userID int, commentID int, text string) error {
 	// 检查用户存在
 	if !CheckUserExist(userID) {
 		return errors.New("no such user")
@@ -117,7 +124,7 @@ func InsertReply(userID int, commentID int, text string, time int64) error {
 
 	// 执行
 	_, err := DB.Exec(`insert into replies(user_id, comment_id, reply_text, create_time)
-	values(?,?,?,?)`, userID, commentID, text, time)
+	values(?,?,?,?)`, userID, commentID, text, time.Now().Unix())
 	if err != nil {
 		return errors.New("insert reply failed")
 	}
@@ -125,16 +132,21 @@ func InsertReply(userID int, commentID int, text string, time int64) error {
 	return nil
 }
 
-// DeleteReplyWithReplyID 删除一条回复，如果该回复不存在返回错误
-func DeleteReplyWithReplyID(replyID int) error {
+// DeleteReplyWithReplyID 删除一条回复，返回错误如果该回复不存在, 或用户无权限删除
+func DeleteReplyWithReplyID(userID int, replyID int) error {
 	if !CheckReplyExist(replyID) {
 		return errors.New("no such reply")
 	}
 
-	// 已知 reply 存在，不必检查 result
-	_, err := DB.Exec(`delete from replies where reply_id = ?`, replyID)
+	// 回复存在，因此 0 row affected 代表评论的发出者不是此用户
+	result, err := DB.Exec(`delete from replies where user_id = ? and reply_id = ?`, userID, replyID)
 	if err != nil {
 		return errors.New("delete reply failed")
+	}
+
+	rowsAffected, _ := result.RowsAffected()
+	if rowsAffected == 0 {
+		return errors.New("no access")
 	}
 
 	return nil
