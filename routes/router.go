@@ -13,6 +13,7 @@ func InitRouter() *gin.Engine {
 
 	// 建立静态文件服务
 	router.StaticFS("/static", http.Dir("/home/lighthouse/IOS_Files"))
+	router.MaxMultipartMemory = 200 << 20 // 仅用于限制视频大小，图片(头像、视频封面)大小限制为 1MB
 
 	/************ 用户服务 **************/
 	// 注册与登录
@@ -35,9 +36,11 @@ func InitRouter() *gin.Engine {
 
 	/************ Content 服务 **************/
 	router.GET("/contents", controller.GetContents)                      // 获取内容集，详见 controller.GetContents 注释
+	router.POST("/contents", controller.PostContent)                     // 发布内容
 	router.GET("/contents/:contentID", controller.GetContentByContentID) // 根据 contentID 获取某条内容的详细信息
 	router.DELETE("/contents/:contentID", controller.DeleteContent)      // 删除内容，仅能删除自己发出的内容
 	// Todo: POST /content
+
 	// Todo: PUT /content/:contentID (maybe)
 
 	/************ Comment 服务 **************/

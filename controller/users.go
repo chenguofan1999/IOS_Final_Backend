@@ -137,7 +137,7 @@ func UpdateUserAvatar(c *gin.Context) {
 	if suffix != ".jpg" && suffix != ".png" && suffix != ".jpeg" && suffix != ".svg" {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status": "failed",
-			"error":  "supported image type: .jpg/.png/.jpeg/.svg ",
+			"error":  "supported image type: jpg,png,jpeg,svg ",
 		})
 		return
 	}
@@ -146,7 +146,7 @@ func UpdateUserAvatar(c *gin.Context) {
 	if avatarFile.Size > (1 << 20) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status": "failed",
-			"error":  "avatar file too big (> 1mb)",
+			"error":  "image file too big (> 1mb)",
 		})
 		return
 	}
@@ -164,10 +164,11 @@ func UpdateUserAvatar(c *gin.Context) {
 		return
 	}
 
+	// 更新数据库
 	if err := model.UpdateAvatar(loginUserID, avatarURL); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": "failed",
-			"error":  "DB error",
+			"error":  "update DB failed",
 		})
 		return
 	}

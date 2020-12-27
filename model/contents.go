@@ -108,15 +108,15 @@ func QueryContents(mode string, specifier interface{}, orderBy string, order str
 
 	switch mode {
 	case "public":
-		rows, err = DB.Query(`select content_id from contents natural join view_num order by `+orderBy+` `+order+` limit ?`, num)
+		rows, err = DB.Query(`select content_id from contents natural left outer join view_num order by `+orderBy+` `+order+` limit ?`, num)
 	case "user":
-		rows, err = DB.Query(`select content_id from contents natural join view_num 
+		rows, err = DB.Query(`select content_id from contents natural left outer join view_num 
 		where user_id = ? order by `+orderBy+` `+order+` limit ?`, specifier, num)
 	case "tag":
-		rows, err = DB.Query(`select content_id from content_tags natural join view_num 
+		rows, err = DB.Query(`select content_id from content_tags natural left outer join view_num 
 		where tag_name = ? order by `+orderBy+` `+order+` limit ?`, specifier, num)
 	case "follow":
-		rows, err = DB.Query(`select content_id from contents natural join view_num
+		rows, err = DB.Query(`select content_id from contents natural left outer join view_num
 		join follow on (user_id = followed_id and follower_id = ?) order by `+orderBy+` `+order+` limit ?`, specifier, num)
 	}
 
@@ -192,4 +192,12 @@ func DeleteContentWithContentID(userID int, contentID int) error {
 	}
 
 	return nil
+}
+
+// QueryMaxContentID 查询最大的 contentID, 以用于预测插入 content 时自动生成的 contentID
+func QueryMaxContentID() int {
+	var maxID int
+	row := DB.QueryRow(`select max(content_id) from contents`)
+	row.Scan(&maxID)
+	return maxID
 }

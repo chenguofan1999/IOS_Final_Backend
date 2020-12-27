@@ -1,8 +1,10 @@
 package controller
 
 import (
+	"fmt"
 	"ios/model"
 	"net/http"
+	"path"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -154,6 +156,107 @@ func DeleteContent(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status": "failed",
 			"error":  err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "success",
+	})
+}
+
+// PostContent 发布一条内容，请求体应该为 Form-data 形式，要求内容有:
+// 1. title : 视频标题
+// 2. description : 视频详细介绍
+// 3. video : 视频文件，支持格式有: WMV,AVI,MKV,RMVB,MP4; 大小限制: 200 mb
+// 4. cover : 封面图片文件，支持格式有: jpg,png,jpeg,svg; 大小限制: 1 mb
+func PostContent(c *gin.Context) {
+	// 获得已登录用户的 userID
+	loginUserID, err := GetUserIDByAuth(c)
+	if err != nil {
+		return
+	}
+
+	title := c.PostForm("title")
+	description := c.PostForm("description")
+	videoFile, err1 := c.FormFile("video")
+	coverFile, err2 := c.FormFile("cover")
+
+	if title == "" || description == "" || err1 != nil || err2 != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "failed",
+			"error":  "expect Form-data: {title(Text), description(Text), video(File), cover(File)}",
+		})
+		return
+	}
+
+	// 检查视频类型
+	videoSuffix := path.Ext(videoFile.Filename)
+	if videoSuffix != ".wmv" && videoSuffix != ".avi" && videoSuffix != ".mkv" && videoSuffix != ".rmvb" && videoSuffix != ".mp4" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "failed",
+			"error":  "supported video type: WMV,AVI,MKV,RMVB,MP4 ",
+		})
+		return
+	}
+
+	// 检查视频大小
+	if videoFile.Size > (200 << 20) {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "failed",
+			"error":  "video file too big (> 200mb)",
+		})
+		return
+	}
+
+	// 检查封面图片类型
+	coverSuffix := path.Ext(coverFile.Filename)
+	if coverSuffix != ".jpg" && coverSuffix != ".png" && coverSuffix != ".jpeg" && coverSuffix != ".svg" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "failed",
+			"error":  "supported image type: jpg,png,jpeg,svg ",
+		})
+		return
+	}
+
+	// 检查封面图片大小
+	if coverFile.Size > (1 << 20) {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "failed",
+			"error":  "image file too big (> 1mb)",
+		})
+		return
+	}
+
+	// 生成文件路径 和 URL
+	predictedContentID := model.QueryMaxContentID() + 1
+	videoPath := fmt.Sprintf("/home/lighthouse/IOS_Files/videos/content%d_video%s", predictedContentID, videoSuffix)
+	coverPath := fmt.Sprintf("/home/lighthouse/IOS_Files/covers/content%d_cover%s", predictedContentID, coverSuffix)
+	videoURL := fmt.Sprintf("/static/videos/content%d_video%s", predictedContentID, videoSuffix)
+	coverURL := fmt.Sprintf("/static/covers/content%d_cover%s", predictedContentID, coverSuffix)
+
+	// 保存到服务器
+	if err := c.SaveUploadedFile(videoFile, videoPath); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status": "failed",
+			"error":  "Save video failed",
+		})
+		return
+	}
+
+	if err := c.SaveUploadedFile(coverFile, coverPath); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status": "failed",
+			"error":  "Save cover image failed",
+		})
+		return
+	}
+
+	// 更新数据库
+	if err := model.InsertContent(title, description, coverURL, videoURL, loginUserID); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status": "failed",
+			"error":  "update DB failed",
 		})
 		return
 	}
