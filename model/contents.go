@@ -175,15 +175,20 @@ func QueryDetailedContent(currentUserID int, contentID int) *DetailedContent {
 }
 
 // DeleteContentWithContentID 删除一条内容，返回错误如果该内容不存在
-func DeleteContentWithContentID(contentID int) error {
+func DeleteContentWithContentID(userID int, contentID int) error {
 	if !CheckContentExist(contentID) {
 		return errors.New("no such content")
 	}
 
-	// 内容存在，因此不必检查 result
-	_, err := DB.Exec(`delete from contents where content_id = ?`, contentID)
+	// 内容存在，因此 0 row affected 代表内容的发出者不是此用户
+	result, err := DB.Exec(`delete from contents where user_id = ? and content_id = ?`, userID, contentID)
 	if err != nil {
 		return errors.New("delete content failed")
+	}
+
+	rowsAffected, _ := result.RowsAffected()
+	if rowsAffected == 0 {
+		return errors.New("no access")
 	}
 
 	return nil

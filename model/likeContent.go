@@ -41,6 +41,7 @@ func QueryHasLikedContent(userID int, contentID int) (bool, error) {
 	return true, nil
 }
 
+// InsertLikeContent : 插入一条喜欢内容的记录，返回错误如果用户/内容不存在，或已经喜欢
 func InsertLikeContent(userID int, contentID int) error {
 	liked, err := QueryHasLikedContent(userID, contentID)
 	if err != nil {
@@ -53,6 +54,7 @@ func InsertLikeContent(userID int, contentID int) error {
 	return nil
 }
 
+// DeleteLikeContent : 删除一条喜欢内容的记录，返回错误如果用户/内容不存在，或原本没有喜欢
 func DeleteLikeContent(userID int, contentID int) error {
 	liked, err := QueryHasLikedContent(userID, contentID)
 	if err != nil {

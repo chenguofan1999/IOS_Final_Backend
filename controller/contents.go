@@ -132,3 +132,33 @@ func GetContentByContentID(c *gin.Context) {
 	})
 
 }
+
+// DeleteContent : 删除一条内容，该内容必须由自己发出
+func DeleteContent(c *gin.Context) {
+	// 获得已登录用户的 userID
+	loginUserID, err := GetUserIDByAuth(c)
+	if err != nil {
+		return
+	}
+
+	contentID, err := strconv.Atoi(c.Param("contentID"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "failed",
+			"error":  "contentID (integer) required",
+		})
+		return
+	}
+
+	if err := model.DeleteContentWithContentID(loginUserID, contentID); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "failed",
+			"error":  err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "success",
+	})
+}

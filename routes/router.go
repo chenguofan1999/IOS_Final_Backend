@@ -11,8 +11,8 @@ import (
 func InitRouter() *gin.Engine {
 	router := gin.Default()
 
-	// 为视频建立文件服务
-	router.StaticFS("/static", http.Dir("/home/lighthouse/videos"))
+	// 建立静态文件服务
+	router.StaticFS("/static", http.Dir("/home/lighthouse/IOS_Files"))
 
 	/************ 用户服务 **************/
 	// 注册与登录
@@ -21,10 +21,10 @@ func InitRouter() *gin.Engine {
 
 	// 用户信息
 	router.GET("/users/:username", controller.GetUserInfoByName) // 获取某用户详细信息
-	router.GET("/user", controller.GetSelfInfo)
-	// Todo: 修改 bio
-	// Todo: 修改 avatar
-	// Todo: 增加 tag
+	router.GET("/user", controller.GetSelfInfo)                  // 获取自己的用户信息
+	router.PUT("/user/bio", controller.UpdateUserBio)            // 更新自己的简介
+	router.PUT("/user/avatar", controller.UpdateUserAvatar)      // 更新自己的头像
+	router.POST("/user/tags", controller.AddTagForCurrentUser)   // 为自己增加关注的 tag
 
 	// 关注
 	router.GET("/users/:username/followers", controller.GetFollowersByUserID) // 获取某用户关注者
@@ -36,9 +36,9 @@ func InitRouter() *gin.Engine {
 	/************ Content 服务 **************/
 	router.GET("/contents", controller.GetContents)                      // 获取内容集，详见 controller.GetContents 注释
 	router.GET("/contents/:contentID", controller.GetContentByContentID) // 根据 contentID 获取某条内容的详细信息
-	// Todo: DELETE /content/:contentID
-	// Todo: PUT /content/:contentID (maybe)
+	router.DELETE("/contents/:contentID", controller.DeleteContent)      // 删除内容，仅能删除自己发出的内容
 	// Todo: POST /content
+	// Todo: PUT /content/:contentID (maybe)
 
 	/************ Comment 服务 **************/
 	router.GET("/comments", controller.GetComments)                 // 获取评论集，详见 controller.GetComments 注释
@@ -51,12 +51,12 @@ func InitRouter() *gin.Engine {
 	router.DELETE("/replies/:replyID", controller.DeleteReply) // 删除回复, 仅能删除自己发的回复
 
 	/************ Like **************/
-	// Todo: PUT /like/content/:contentID
-	// Todo: DELETE /like/content/:contentID
-	// Todo: PUT /like/comment/:commentID
-	// Todo: DELETE /like/comment/:commentID
-	// Todo: PUT /like/reply/:replyID
-	// Todo: DELETE /like/reply/:replyID
+	router.PUT("/like/content/:contentID", controller.LikeContent)
+	router.DELETE("/like/content/:contentID", controller.CancelLikeContent)
+	router.PUT("/like/comment/:commentID", controller.LikeComment)
+	router.DELETE("/like/comment/:commentID", controller.CancelLikeComment)
+	router.PUT("/like/reply/:replyID", controller.LikeReply)
+	router.DELETE("/like/reply/:replyID", controller.CancelLikeReply)
 
 	return router
 }

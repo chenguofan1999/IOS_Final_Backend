@@ -75,7 +75,7 @@ func PostReply(c *gin.Context) {
 	if err := c.BindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status": "failed",
-			"error":  "expect commentID and text of JSON form",
+			"error":  "expect JSON: {commentID, text}",
 		})
 		return
 	}

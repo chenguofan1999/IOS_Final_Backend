@@ -42,6 +42,7 @@ func QueryHasLikedComment(userID int, commentID int) (bool, error) {
 	return true, nil
 }
 
+// InsertLikeComment : 插入一条喜欢评论的记录，返回错误如果用户/评论不存在，或已经喜欢
 func InsertLikeComment(userID int, commentID int) error {
 	liked, err := QueryHasLikedComment(userID, commentID)
 	if err != nil {
@@ -54,6 +55,7 @@ func InsertLikeComment(userID int, commentID int) error {
 	return nil
 }
 
+// DeleteLikeComment : 删除一条喜欢评论的记录，返回错误如果用户/评论不存在，或原本没有喜欢
 func DeleteLikeComment(userID int, commentID int) error {
 	liked, err := QueryHasLikedComment(userID, commentID)
 	if err != nil {

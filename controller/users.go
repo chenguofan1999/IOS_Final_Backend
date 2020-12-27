@@ -2,8 +2,10 @@ package controller
 
 import (
 	"errors"
+	"fmt"
 	"ios/model"
 	"net/http"
+	"path"
 
 	"github.com/gin-gonic/gin"
 )
@@ -75,4 +77,136 @@ func GetUserIDByAuth(c *gin.Context) (int, error) {
 	}
 
 	return loginUserID, nil
+}
+
+type bioInfo struct {
+	Bio string `json:"bio" binding:"required"`
+}
+
+// UpdateUserBio : 更新当前用户的简介,请求体应为 JSON 形式,包含 bio 字段
+func UpdateUserBio(c *gin.Context) {
+	// 获得已登录用户的 userID
+	loginUserID, err := GetUserIDByAuth(c)
+	if err != nil {
+		return
+	}
+
+	// 获取请求体中的参数
+	var info bioInfo
+	if err := c.BindJSON(&info); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "failed",
+			"error":  "expect JSON: {bio}",
+		})
+		return
+	}
+
+	if err := model.UpdateBio(loginUserID, info.Bio); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "failed",
+			"error":  err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "success",
+	})
+}
+
+// UpdateUserAvatar : 更新当前用户的头像,请求体应为 Form-data 形式, 包含 key 为 avatar 的头像文件
+func UpdateUserAvatar(c *gin.Context) {
+	// 获得已登录用户的 userID
+	loginUserID, err := GetUserIDByAuth(c)
+	if err != nil {
+		return
+	}
+
+	// 读取文件
+	avatarFile, err := c.FormFile("avatar")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "failed",
+			"error":  "expect Form-data: {avatar}",
+		})
+		return
+	}
+
+	// 检查后缀
+	suffix := path.Ext(avatarFile.Filename)
+	if suffix != ".jpg" && suffix != ".png" && suffix != ".jpeg" && suffix != ".svg" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "failed",
+			"error":  "supported image type: .jpg/.png/.jpeg/.svg ",
+		})
+		return
+	}
+
+	// 检查图片大小不大于 1mb
+	if avatarFile.Size > (1 << 20) {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "failed",
+			"error":  "avatar file too big (> 1mb)",
+		})
+		return
+	}
+
+	// 文件路径 和 URL
+	filePath := fmt.Sprintf("/home/lighthouse/IOS_Files/avatars/user%d_avatar%s", loginUserID, suffix)
+	avatarURL := fmt.Sprintf("/static/avatars/user%d_avatar%s", loginUserID, suffix)
+
+	// 保存
+	if err := c.SaveUploadedFile(avatarFile, filePath); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "failed",
+			"error":  "Save error",
+		})
+		return
+	}
+
+	if err := model.UpdateAvatar(loginUserID, avatarURL); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status": "failed",
+			"error":  "DB error",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "success",
+	})
+}
+
+type tagFormat struct {
+	Tag string `json:"tag" binding:"required"`
+}
+
+// AddTagForCurrentUser : 为当前用户增加一个 Tag, 请求体为 JSON 形式，包含 tag 字段
+func AddTagForCurrentUser(c *gin.Context) {
+	// 获得已登录用户的 userID
+	loginUserID, err := GetUserIDByAuth(c)
+	if err != nil {
+		return
+	}
+
+	var newTag tagFormat
+	if err := c.BindJSON(&newTag); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "failed",
+			"error":  "expect JSON: {tag}",
+		})
+		return
+	}
+
+	if err := model.InsertUserTag(loginUserID, newTag.Tag); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "failed",
+			"error":  err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "success",
+	})
 }

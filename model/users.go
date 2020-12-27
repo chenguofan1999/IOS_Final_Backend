@@ -68,14 +68,23 @@ func QueryPasswordWithName(username string) (string, error) {
 	return pwd, nil
 }
 
-// UpdateBio 更新指定用户 ID 的用户的简介, 返回错误如果用户不存在
-func UpdateBio(userID int, newBio string) {
-	DB.Exec("update users set bio = ? where user_id = ?", newBio, userID)
+// UpdateBio 更新指定用户 ID 的用户的简介, 返回错误如果用户不存在，或执行错误
+func UpdateBio(userID int, newBio string) error {
+	if !CheckUserExist(userID) {
+		return errors.New("no such user")
+	}
+
+	_, err := DB.Exec("update users set bio = ? where user_id = ?", newBio, userID)
+	return err
 }
 
-// UpdateAvatar 更新指定用户 ID 的用户的头像
-func UpdateAvatar(userID int, newAvatarURL string) {
-	DB.Exec("update users set avatar_url = ? where user_id = ?", newAvatarURL, userID)
+// UpdateAvatar 更新指定用户 ID 的用户的头像, 返回错误如果用户不存在，或执行错误
+func UpdateAvatar(userID int, newAvatarURL string) error {
+	if !CheckUserExist(userID) {
+		return errors.New("no such user")
+	}
+	_, err := DB.Exec("update users set avatar_url = ? where user_id = ?", newAvatarURL, userID)
+	return err
 }
 
 // QueryMiniUserWithUserID 根据用户 ID 获得 MiniUser 对象，具有足够用于辨别用户的属性，返回 nil 如果 user 不存在
@@ -112,5 +121,4 @@ func QueryDetailedUser(currentUserID int, userID int) *DetailedUser {
 	row.Scan(&user.Username, &user.AvatarURL, &user.Bio)
 
 	return user
-
 }
