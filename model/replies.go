@@ -71,7 +71,7 @@ func QueryReplies(currentUserID int, commentID int, orderBy string, order string
 	}
 
 	replies := make([]Reply, 0)
-	rows, err := DB.Query(`select reply_id from replies natural join
+	rows, err := DB.Query(`select reply_id from replies natural left outer join
 		(select reply_id, count(1) as like_num
 		from like_reply group by reply_id) as X
 		where comment_id = ? order by `+orderBy+` `+order, commentID)

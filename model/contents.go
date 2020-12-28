@@ -85,8 +85,8 @@ func QueryBriefContentWithContentID(contentID int) *BriefContent {
 }
 
 // QueryContents 是查询内容集合的统一接口
-// mode: public / user / tag / followBy
-// specifier: 当模式为 user / tag / followBy 时，specifier 分别表示用户名 / tag名 / 用户名
+// mode: public / user / tag / followBy / history / search
+// specifier: 当模式为 user / tag / followBy / history / search 时，specifier 分别表示用户名 / tag名 / 用户名 / 用户名 / 关键词
 // orderBy: view_num / create_time
 // order : asc / desc
 // num: 条数
@@ -118,6 +118,12 @@ func QueryContents(mode string, specifier interface{}, orderBy string, order str
 	case "follow":
 		rows, err = DB.Query(`select content_id from contents natural left outer join view_num
 		join follow on (user_id = followed_id and follower_id = ?) order by `+orderBy+` `+order+` limit ?`, specifier, num)
+	case "history":
+		rows, err = DB.Query(`select content_id from history where user_id = ? order by view_time desc limit ?`, specifier, num)
+	case "search":
+		searchStr, _ := specifier.(string)
+		rows, err = DB.Query(`select content_id from contents 
+		where title like "%`+searchStr+`%" order by `+orderBy+` `+order+` limit ?`, num)
 	}
 
 	contents := make([]BriefContent, 0)

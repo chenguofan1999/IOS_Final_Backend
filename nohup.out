@@ -1,0 +1,406 @@
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /static/*filepath         --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (3 handlers)
+[GIN-debug] HEAD   /static/*filepath         --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (3 handlers)
+[GIN-debug] POST   /signup                   --> ios/controller.SignUp (3 handlers)
+[GIN-debug] POST   /login                    --> ios/controller.Login (3 handlers)
+[GIN-debug] GET    /users/:username          --> ios/controller.GetUserInfoByName (3 handlers)
+[GIN-debug] GET    /user                     --> ios/controller.GetSelfInfo (3 handlers)
+[GIN-debug] PUT    /user/bio                 --> ios/controller.UpdateUserBio (3 handlers)
+[GIN-debug] PUT    /user/avatar              --> ios/controller.UpdateUserAvatar (3 handlers)
+[GIN-debug] POST   /user/tags                --> ios/controller.AddTagForCurrentUser (3 handlers)
+[GIN-debug] GET    /users/:username/followers --> ios/controller.GetFollowersByUserID (3 handlers)
+[GIN-debug] GET    /users/:username/following --> ios/controller.GetFollowingByUserID (3 handlers)
+[GIN-debug] GET    /user/following/:username --> ios/controller.CheckFollowing (3 handlers)
+[GIN-debug] PUT    /user/following/:username --> ios/controller.FollowUser (3 handlers)
+[GIN-debug] DELETE /user/following/:username --> ios/controller.UnfollowUser (3 handlers)
+[GIN-debug] GET    /contents                 --> ios/controller.GetContents (3 handlers)
+[GIN-debug] POST   /contents                 --> ios/controller.PostContent (3 handlers)
+[GIN-debug] GET    /contents/:contentID      --> ios/controller.GetContentByContentID (3 handlers)
+[GIN-debug] DELETE /contents/:contentID      --> ios/controller.DeleteContent (3 handlers)
+[GIN-debug] GET    /comments                 --> ios/controller.GetComments (3 handlers)
+[GIN-debug] POST   /comments                 --> ios/controller.PostComment (3 handlers)
+[GIN-debug] DELETE /comments/:commentID      --> ios/controller.DeleteComment (3 handlers)
+[GIN-debug] GET    /replies                  --> ios/controller.GetReplies (3 handlers)
+[GIN-debug] POST   /replies                  --> ios/controller.PostReply (3 handlers)
+[GIN-debug] DELETE /replies/:replyID         --> ios/controller.DeleteReply (3 handlers)
+[GIN-debug] PUT    /like/content/:contentID  --> ios/controller.LikeContent (3 handlers)
+[GIN-debug] DELETE /like/content/:contentID  --> ios/controller.CancelLikeContent (3 handlers)
+[GIN-debug] PUT    /like/comment/:commentID  --> ios/controller.LikeComment (3 handlers)
+[GIN-debug] DELETE /like/comment/:commentID  --> ios/controller.CancelLikeComment (3 handlers)
+[GIN-debug] PUT    /like/reply/:replyID      --> ios/controller.LikeReply (3 handlers)
+[GIN-debug] DELETE /like/reply/:replyID      --> ios/controller.CancelLikeReply (3 handlers)
+[GIN-debug] Listening and serving HTTP on :5009
+[GIN-debug] redirecting request 301: /static/ --> /static/
+[GIN] 2020/12/27 - 16:51:43 | 200 |     132.421µs | 120.236.174.139 | GET      "/static/"
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /static/*filepath         --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (3 handlers)
+[GIN-debug] HEAD   /static/*filepath         --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (3 handlers)
+[GIN-debug] POST   /signup                   --> ios/controller.SignUp (3 handlers)
+[GIN-debug] POST   /login                    --> ios/controller.Login (3 handlers)
+[GIN-debug] GET    /users/:username          --> ios/controller.GetUserInfoByName (3 handlers)
+[GIN-debug] GET    /user                     --> ios/controller.GetSelfInfo (3 handlers)
+[GIN-debug] PUT    /user/bio                 --> ios/controller.UpdateUserBio (3 handlers)
+[GIN-debug] PUT    /user/avatar              --> ios/controller.UpdateUserAvatar (3 handlers)
+[GIN-debug] POST   /user/tags                --> ios/controller.AddTagForCurrentUser (3 handlers)
+[GIN-debug] GET    /users/:username/followers --> ios/controller.GetFollowersByUserID (3 handlers)
+[GIN-debug] GET    /users/:username/following --> ios/controller.GetFollowingByUserID (3 handlers)
+[GIN-debug] GET    /user/following/:username --> ios/controller.CheckFollowing (3 handlers)
+[GIN-debug] PUT    /user/following/:username --> ios/controller.FollowUser (3 handlers)
+[GIN-debug] DELETE /user/following/:username --> ios/controller.UnfollowUser (3 handlers)
+[GIN-debug] GET    /contents                 --> ios/controller.GetContents (3 handlers)
+[GIN-debug] POST   /contents                 --> ios/controller.PostContent (3 handlers)
+[GIN-debug] GET    /contents/:contentID      --> ios/controller.GetContentByContentID (3 handlers)
+[GIN-debug] DELETE /contents/:contentID      --> ios/controller.DeleteContent (3 handlers)
+[GIN-debug] GET    /comments                 --> ios/controller.GetComments (3 handlers)
+[GIN-debug] POST   /comments                 --> ios/controller.PostComment (3 handlers)
+[GIN-debug] DELETE /comments/:commentID      --> ios/controller.DeleteComment (3 handlers)
+[GIN-debug] GET    /replies                  --> ios/controller.GetReplies (3 handlers)
+[GIN-debug] POST   /replies                  --> ios/controller.PostReply (3 handlers)
+[GIN-debug] DELETE /replies/:replyID         --> ios/controller.DeleteReply (3 handlers)
+[GIN-debug] PUT    /like/content/:contentID  --> ios/controller.LikeContent (3 handlers)
+[GIN-debug] DELETE /like/content/:contentID  --> ios/controller.CancelLikeContent (3 handlers)
+[GIN-debug] PUT    /like/comment/:commentID  --> ios/controller.LikeComment (3 handlers)
+[GIN-debug] DELETE /like/comment/:commentID  --> ios/controller.CancelLikeComment (3 handlers)
+[GIN-debug] PUT    /like/reply/:replyID      --> ios/controller.LikeReply (3 handlers)
+[GIN-debug] DELETE /like/reply/:replyID      --> ios/controller.CancelLikeReply (3 handlers)
+[GIN-debug] Listening and serving HTTP on :5009
+[GIN] 2020/12/27 - 16:54:27 | 200 |     178.213µs | 120.236.174.139 | GET      "/static/"
+[GIN] 2020/12/27 - 16:54:29 | 200 |    1.032122ms | 120.236.174.139 | GET      "/static/avatars/"
+[GIN] 2020/12/27 - 16:54:31 | 200 |   10.086439ms | 120.236.174.139 | GET      "/static/avatars/user9_avatar.png"
+[GIN] 2020/12/27 - 16:54:32 | 200 |  150.288799ms | 120.236.174.139 | GET      "/static/avatars/user9_avatar.jpg"
+[GIN] 2020/12/27 - 16:54:34 | 200 |      101.87µs | 120.236.174.139 | GET      "/static/covers/"
+[GIN] 2020/12/27 - 16:54:36 | 200 |    87.94747ms | 120.236.174.139 | GET      "/static/covers/content5_cover.jpg"
+[GIN] 2020/12/27 - 16:54:38 | 200 |    3.133293ms | 120.236.174.139 | GET      "/static/videos/"
+[GIN] 2020/12/27 - 16:54:38 | 200 |   36.881667ms | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/27 - 16:54:38 | 404 |         656ns | 120.236.174.139 | GET      "/favicon.ico"
+[GIN] 2020/12/27 - 16:54:40 | 206 |  1.306537731s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+Querying contents...
+mode:  public
+specifier:  _
+orderBy:  content_id
+order:  desc
+num:  30
+[GIN] 2020/12/27 - 16:58:05 | 200 |   12.535213ms | 120.236.174.139 | GET      "/contents"
+[GIN] 2020/12/27 - 17:01:25 | 304 |       57.86µs | 120.236.174.139 | GET      "/static/"
+[GIN] 2020/12/27 - 17:05:10 | 404 |         684ns | 120.236.174.145 | GET      "/"
+[GIN] 2020/12/27 - 17:05:10 | 404 |         717ns | 120.236.174.145 | GET      "/favicon.ico"
+[GIN] 2020/12/27 - 17:05:50 | 404 |         590ns | 120.236.174.145 | GET      "/"
+[GIN-debug] redirecting request 301: /static/ --> /static/
+[GIN] 2020/12/27 - 17:10:59 | 200 |       88.83µs | 120.236.174.145 | GET      "/static/"
+[GIN] 2020/12/27 - 17:11:03 | 200 |     105.009µs | 120.236.174.145 | GET      "/static/avatars/"
+[GIN] 2020/12/27 - 17:11:04 | 200 |      78.425µs | 120.236.174.145 | GET      "/static/avatars/user1_avatar.png"
+[GIN] 2020/12/27 - 17:11:07 | 200 |      83.093µs | 120.236.174.145 | GET      "/static/videos/"
+[GIN] 2020/12/27 - 17:11:09 | 200 |      99.417µs | 120.236.174.145 | GET      "/static/covers/"
+[GIN] 2020/12/27 - 17:11:11 | 200 |   44.886082ms | 120.236.174.145 | GET      "/static/covers/content5_cover.jpg"
+[GIN] 2020/12/27 - 17:11:28 | 200 |   37.561397ms | 120.236.174.145 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/27 - 17:11:29 | 404 |       3.178µs | 120.236.174.145 | GET      "/favicon.ico"
+[GIN] 2020/12/27 - 17:11:32 | 206 |  3.952300841s | 120.236.174.145 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/27 - 17:31:06 | 400 |      75.814µs | 120.236.174.145 | POST     "/signup"
+[GIN] 2020/12/27 - 17:31:21 | 200 |    4.042225ms | 120.236.174.145 | POST     "/signup"
+[GIN] 2020/12/27 - 17:31:45 | 200 |     475.829µs | 120.236.174.145 | POST     "/login"
+[GIN] 2020/12/27 - 17:32:57 | 404 |         612ns | 120.236.174.145 | POST     "/users/"
+[GIN] 2020/12/27 - 17:36:34 | 404 |         636ns | 120.236.174.145 | POST     "/users/dooog"
+[GIN] 2020/12/27 - 17:36:38 | 404 |         580ns | 120.236.174.145 | POST     "/users/"
+[GIN] 2020/12/27 - 17:37:10 | 404 |         616ns | 120.236.174.145 | POST     "/users/"
+[GIN] 2020/12/27 - 17:37:19 | 200 |     761.064µs | 120.236.174.145 | POST     "/login"
+[GIN] 2020/12/27 - 17:37:27 | 200 |     455.225µs | 120.236.174.145 | POST     "/login"
+[GIN] 2020/12/27 - 17:37:28 | 200 |     445.106µs | 120.236.174.145 | POST     "/login"
+[GIN] 2020/12/27 - 17:40:15 | 404 |         603ns | 120.236.174.145 | POST     "/users/"
+[GIN] 2020/12/27 - 17:40:24 | 404 |         653ns | 120.236.174.145 | POST     "/user"
+[GIN] 2020/12/27 - 17:40:30 | 200 |    2.737805ms | 120.236.174.145 | GET      "/user"
+[GIN-debug] redirecting request 301: /user --> /user
+[GIN] 2020/12/27 - 17:40:38 | 200 |    2.632306ms | 120.236.174.145 | GET      "/user"
+[GIN] 2020/12/27 - 17:46:25 | 400 |     429.425µs | 120.236.174.145 | PUT      "/user/bio"
+[GIN] 2020/12/27 - 17:47:05 | 304 |      72.169µs | 120.236.174.145 | GET      "/static/avatars/"
+[GIN] 2020/12/27 - 17:47:07 | 200 |     150.131µs | 120.236.174.145 | GET      "/static/avatars/user9_avatar.png"
+[GIN] 2020/12/27 - 17:47:19 | 200 |   10.745461ms | 120.236.174.145 | PUT      "/user/bio"
+[GIN] 2020/12/27 - 17:47:46 | 200 |      84.346µs |   202.116.81.74 | HEAD     "/static/videos/content5_video.mp4"
+[GIN] 2020/12/27 - 17:49:23 | 200 |    3.699738ms | 120.236.174.145 | PUT      "/user/bio"
+[GIN] 2020/12/27 - 17:52:15 | 200 |   57.075043ms | 120.236.174.145 | PUT      "/user/avatar"
+[GIN] 2020/12/27 - 17:56:55 | 200 |      4.3214ms | 120.236.174.145 | POST     "/user/tags"
+[GIN] 2020/12/27 - 17:59:26 | 400 |     573.935µs | 120.236.174.145 | POST     "/contents"
+Querying contents...
+mode:  public
+specifier:  _
+orderBy:  content_id
+order:  desc
+num:  30
+[GIN] 2020/12/27 - 17:59:30 | 200 |   11.453932ms | 120.236.174.145 | GET      "/contents"
+Querying contents...
+mode:  public
+specifier:  _
+orderBy:  content_id
+order:  desc
+num:  30
+[GIN] 2020/12/27 - 18:00:43 | 200 |   13.875979ms | 120.236.174.145 | GET      "/contents"
+[GIN] 2020/12/27 - 18:03:20 | 200 |        15m34s |   202.116.81.74 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/27 - 18:09:33 | 200 |      61.994µs |   202.116.81.74 | HEAD     "/static/avatars/user9_avatar.png"
+[GIN] 2020/12/27 - 18:13:39 | 400 |    434.7474ms | 120.236.174.145 | POST     "/contents"
+[GIN] 2020/12/27 - 18:13:55 | 200 |  178.771228ms | 120.236.174.145 | POST     "/contents"
+Querying contents...
+mode:  public
+specifier:  _
+orderBy:  content_id
+order:  desc
+num:  30
+[GIN] 2020/12/27 - 18:14:01 | 200 |   13.425617ms | 120.236.174.145 | GET      "/contents"
+[GIN] 2020/12/27 - 18:14:15 | 200 |     120.927µs | 120.236.174.145 | GET      "/static/videos/"
+[GIN] 2020/12/27 - 18:14:17 | 200 |   33.016776ms | 120.236.174.145 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/27 - 18:14:17 | 404 |         534ns | 120.236.174.145 | GET      "/favicon.ico"
+[GIN] 2020/12/27 - 18:14:17 | 206 |  279.275874ms | 120.236.174.145 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/27 - 18:14:26 | 404 |         601ns | 120.236.174.145 | GET      "/favicon.ico"
+[GIN-debug] redirecting request 301: /contents --> /contents
+Querying contents...
+mode:  public
+specifier:  _
+orderBy:  content_id
+order:  desc
+num:  30
+[GIN] 2020/12/27 - 18:15:04 | 200 |   14.425931ms | 120.236.174.145 | GET      "/contents"
+[GIN-debug] redirecting request 301: /contents --> /contents?contentId=6
+Querying contents...
+mode:  public
+specifier:  _
+orderBy:  content_id
+order:  desc
+num:  30
+[GIN] 2020/12/27 - 18:16:28 | 200 |   15.803469ms | 120.236.174.145 | GET      "/contents?contentId=6"
+[GIN-debug] redirecting request 301: /contents --> /contents?contentID=6
+Querying contents...
+mode:  public
+specifier:  _
+orderBy:  content_id
+order:  desc
+num:  30
+[GIN] 2020/12/27 - 18:19:46 | 200 |   12.504159ms | 120.236.174.145 | GET      "/contents?contentID=6"
+[GIN-debug] redirecting request 301: /contents --> /contents
+Querying contents...
+mode:  public
+specifier:  _
+orderBy:  content_id
+order:  desc
+num:  30
+[GIN] 2020/12/27 - 18:20:28 | 200 |   13.023694ms | 120.236.174.145 | GET      "/contents"
+[GIN] 2020/12/27 - 18:20:32 | 400 |      22.315µs | 120.236.174.145 | GET      "/contents/:"
+[GIN-debug] redirecting request 301: /contents --> /contents
+Querying contents...
+mode:  public
+specifier:  _
+orderBy:  content_id
+order:  desc
+num:  30
+[GIN] 2020/12/27 - 18:20:35 | 200 |   14.731442ms | 120.236.174.145 | GET      "/contents"
+[GIN] 2020/12/27 - 18:21:58 | 401 |      50.635µs | 120.236.174.167 | GET      "/contents/3"
+[GIN] 2020/12/27 - 18:22:33 | 200 |    8.211737ms | 120.236.174.167 | GET      "/contents/3"
+[GIN] 2020/12/27 - 18:22:37 | 200 |    8.263917ms | 120.236.174.167 | GET      "/contents/3"
+[GIN] 2020/12/27 - 19:44:48 | 200 |    6.773682ms | 120.236.174.167 | GET      "/contents/3"
+Querying contents...
+mode:  public
+specifier:  _
+orderBy:  content_id
+order:  desc
+num:  30
+[GIN] 2020/12/27 - 19:44:51 | 200 |    12.59089ms | 120.236.174.167 | GET      "/contents"
+[GIN] 2020/12/27 - 19:44:56 | 200 |     172.287µs | 120.236.174.167 | GET      "/static/covers/content6_cover.jpg"
+[GIN] 2020/12/27 - 19:45:08 | 200 |    8.439729ms | 120.236.174.167 | GET      "/contents/6"
+[GIN] 2020/12/27 - 19:45:13 | 200 |   57.521337ms | 120.236.174.167 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/27 - 21:40:25 | 200 |    7.050508ms | 120.236.174.167 | GET      "/contents/6"
+Querying contents...
+mode:  public
+specifier:  _
+orderBy:  content_id
+order:  desc
+num:  30
+[GIN] 2020/12/27 - 21:40:30 | 200 |    14.14089ms | 120.236.174.167 | GET      "/contents"
+[GIN] 2020/12/27 - 21:40:52 | 200 |    7.149652ms | 120.236.174.167 | GET      "/contents/6"
+[GIN] 2020/12/28 - 09:25:46 | 200 |     229.785µs | 120.236.174.139 | GET      "/static/videos/"
+[GIN] 2020/12/28 - 10:49:08 | 200 |   54.095582ms | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 10:49:08 | 404 |         517ns | 120.236.174.139 | GET      "/favicon.ico"
+[GIN] 2020/12/28 - 10:49:09 | 206 |  1.263267846s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 10:50:05 | 200 |      78.568µs |   202.116.81.74 | HEAD     "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 10:51:45 | 304 |      57.006µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 10:51:45 | 404 |         528ns | 120.236.174.139 | GET      "/favicon.ico"
+[GIN] 2020/12/28 - 10:51:46 | 206 |  1.356576811s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 10:52:21 | 200 |    36.84352ms | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 10:52:21 | 206 |   99.165091ms | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 10:52:21 | 404 |         664ns | 120.236.174.139 | GET      "/favicon.ico"
+[GIN] 2020/12/28 - 10:53:27 | 200 |      68.791µs |   202.116.81.74 | HEAD     "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 10:53:27 | 200 |    7.122889ms |   202.116.81.74 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 10:54:01 | 200 |      70.352µs |   202.116.81.74 | HEAD     "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 10:54:01 | 200 |    7.228253ms |   202.116.81.74 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:05:41 | 200 |        15m35s |   202.116.81.74 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:08:05 | 206 |      117.89µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:08:06 | 206 |  523.287944ms | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:08:11 | 206 |  5.039767117s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:23:24 | 206 |      87.562µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:23:24 | 206 |   27.080516ms | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:23:24 | 206 |  139.664346ms | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:23:26 | 206 |      87.374µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:23:27 | 206 |     106.261µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:23:27 | 206 |       91.87µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:23:29 | 206 |     111.464µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:23:29 | 206 |      71.984µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:23:29 | 206 |      94.486µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:23:29 | 206 |   1.87486911s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:23:29 | 206 |  4.294281616s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:23:29 | 206 |  504.074281ms | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:23:31 | 206 |  4.014156713s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:23:31 | 206 |   4.98514611s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:23:31 | 206 |     121.241µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:23:31 | 206 |      79.666µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:23:31 | 206 |     163.026µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:23:33 | 206 |  1.223376709s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:23:37 | 206 |  7.851590679s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:23:42 | 206 | 11.030030716s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:23:42 | 206 |      68.101µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:23:44 | 206 |  1.980669959s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:23:47 | 206 |  14.34837994s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:23:49 | 206 | 20.437588154s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:23:50 | 206 |      68.273µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:23:51 | 206 |  1.328923188s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:23:54 | 206 | 16.493053113s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:25:12 | 206 |       85.59µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:25:16 | 206 |   3.83573755s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:25:16 | 206 |      76.591µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:25:17 | 206 |       84.59µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:25:18 | 206 |     114.492µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:25:22 | 206 |  5.824487363s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:25:23 | 206 |  6.158825986s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:25:28 | 206 |  9.977048211s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:25:52 | 206 |     101.267µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:25:55 | 206 |      80.896µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:25:56 | 206 |  4.119346684s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:25:58 | 206 |  2.995693238s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:26:03 | 206 |       78.07µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:26:03 | 206 |      70.644µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:26:04 | 206 |      99.807µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:26:04 | 206 |       83.15µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:26:07 | 206 |  4.803977518s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:26:08 | 206 |      142.21µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:26:08 | 206 |      73.651µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:26:08 | 206 |      72.179µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:26:08 | 206 |      61.708µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:26:08 | 206 |      71.547µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:26:08 | 206 |      67.065µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:26:08 | 206 |          68µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:26:08 | 206 |      61.794µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:26:10 | 200 |      72.686µs |   202.116.81.74 | HEAD     "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:26:12 | 206 |  8.224645334s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:26:12 | 200 |  2.107669801s |   202.116.81.74 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:26:12 | 206 |  7.979703299s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:26:16 | 206 |  7.891577814s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:26:17 | 206 |   4.92245604s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:26:18 | 206 |  2.106339807s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:26:23 | 206 |  3.944538212s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:26:24 | 206 | 11.209647692s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:26:24 | 206 |      69.255µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:26:26 | 206 |  1.604096317s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:26:36 | 206 | 12.338993724s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:26:36 | 206 | 19.419150125s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:26:38 | 206 | 33.654361265s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:29:12 | 200 |      91.967µs |   202.116.81.74 | HEAD     "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:29:12 | 200 |    7.381678ms |   202.116.81.74 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:39:54 | 206 |     121.469µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:39:55 | 206 |       89.52µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:39:56 | 206 |     106.083µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:39:56 | 206 |      94.262µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:39:59 | 206 |  4.022254239s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:39:59 | 206 |      90.559µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:39:59 | 206 |      79.853µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:39:59 | 206 |     103.258µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:39:59 | 206 |      69.063µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:40:00 | 206 |  5.501389094s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:40:01 | 206 |  4.450375131s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:40:02 | 206 |  1.547222219s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:40:05 | 206 |  2.699243927s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:40:06 | 206 |      78.093µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:40:11 | 206 | 11.971701827s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:40:13 | 206 | 12.116151867s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:40:17 | 206 | 11.108825514s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:40:25 | 206 | 28.959726791s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:51:19 | 206 |     111.342µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:51:19 | 206 |  305.466123ms | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 11:51:19 | 206 |      73.987µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 11:51:24 | 206 |  4.310500567s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:03:57 | 206 |      88.876µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:03:57 | 206 |   46.149559ms | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:03:57 | 206 |  141.629763ms | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:03:58 | 206 |      82.261µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 12:03:58 | 206 |     149.769µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:03:59 | 206 |      79.421µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 12:04:01 | 206 |   2.45785411s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 12:04:01 | 206 |     139.603µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 12:04:01 | 206 |     168.271µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 12:04:01 | 206 |      93.179µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:04:01 | 206 |     167.942µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:04:02 | 206 |     100.352µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 12:04:07 | 206 |  8.756760776s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 12:04:08 | 206 |  9.752364377s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:04:10 | 206 |  3.417267992s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 12:04:14 | 206 |  12.57175235s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:04:16 | 206 | 19.110822575s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:04:46 | 200 |      71.136µs |   202.116.81.74 | HEAD     "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:04:47 | 200 |  876.762963ms |   202.116.81.74 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:05:01 | 206 |      97.267µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:05:01 | 206 |   62.191478ms | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:05:01 | 206 |  152.243448ms | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:05:02 | 206 |     175.049µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:05:03 | 206 |      96.355µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 12:05:03 | 206 |     143.017µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 12:05:03 | 206 |  421.158668ms | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 12:05:04 | 206 |      71.881µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:05:04 | 206 |      61.239µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 12:05:10 | 206 |  6.721086111s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:05:12 | 206 |  7.739179845s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 12:05:14 | 206 | 12.705820142s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:05:24 | 206 |      87.375µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:05:25 | 206 |  328.758122ms | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:05:36 | 206 |      97.913µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:05:36 | 206 |   93.714025ms | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:05:36 | 206 |  216.110845ms | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:05:37 | 206 |      85.155µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 12:05:37 | 206 |      75.508µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:05:37 | 206 |      84.648µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 12:05:41 | 206 |  4.873933318s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:05:41 | 206 |     101.673µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:05:41 | 206 |     148.226µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 12:05:41 | 206 |      95.519µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 12:05:41 | 206 |      68.698µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:05:41 | 206 |      70.944µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 12:05:41 | 206 |      67.711µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:05:46 | 206 |  4.633722409s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:05:47 | 206 |  737.235838ms | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 12:05:50 | 206 | 13.496120718s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 12:05:52 | 206 |  1.262530584s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 12:05:56 | 206 |  9.702024076s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:05:58 | 206 |  6.603784065s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:06:04 | 206 | 26.627738917s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:06:07 | 206 | 29.923610951s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 12:06:49 | 200 |      76.323µs |   202.116.81.74 | HEAD     "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:06:50 | 200 |  874.037013ms |   202.116.81.74 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:08:52 | 206 |      95.383µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:08:53 | 206 |       95.69µs | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 12:08:54 | 206 |       91.42µs | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:08:56 | 206 |  4.207028299s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:09:02 | 206 |   7.93620072s | 120.236.174.139 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:09:07 | 206 | 13.810436026s | 120.236.174.139 | GET      "/static/videos/content6_video.mp4"
+[GIN] 2020/12/28 - 12:10:38 | 200 |      88.665µs |   202.116.81.74 | HEAD     "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 12:10:38 | 200 |    7.908814ms |   202.116.81.74 | GET      "/static/videos/content5_video.mp4"
+[GIN] 2020/12/28 - 16:10:41 | 401 |     105.078µs | 120.236.174.139 | GET      "/contents/2"
+[mysql] 2020/12/28 16:10:50 packets.go:122: closing bad idle connection: EOF
+[mysql] 2020/12/28 16:10:50 connection.go:158: driver: bad connection
+[mysql] 2020/12/28 16:10:50 packets.go:122: closing bad idle connection: EOF
+[mysql] 2020/12/28 16:10:50 connection.go:158: driver: bad connection
+[GIN] 2020/12/28 - 16:10:50 | 200 |  137.816281ms | 120.236.174.139 | GET      "/contents/6"
+[GIN] 2020/12/28 - 16:13:31 | 404 |         584ns | 120.236.174.139 | GET      "/user/chen"
+[GIN] 2020/12/28 - 16:13:33 | 200 |    2.732885ms | 120.236.174.139 | GET      "/users/chen"

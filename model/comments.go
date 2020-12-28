@@ -112,7 +112,7 @@ func QueryComments(currentUserID int, contentID int, orderBy string, order strin
 	}
 
 	comments := make([]Comment, 0)
-	rows, err := DB.Query(`select comment_id from comments natural join 
+	rows, err := DB.Query(`select comment_id from comments natural left outer join 
 		(select comment_id, count(1) as like_num 
 		from like_comment group by comment_id) as X 
 		where content_id = ? order by `+orderBy+` `+order, contentID)

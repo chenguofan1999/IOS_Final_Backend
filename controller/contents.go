@@ -14,9 +14,11 @@ import (
 // 这些参数是互斥的，即一条请求中只能 query 其中之一：
 // 1. tag : 获取带有某个标签的内容 (tag = {tagName})
 // 2. user : 获取指定用户的内容 (user = {userName})
-// 3. follow : 当前用户关注的所有用户的内容 (follow = true)
-// 4. self : 当前用户自己发的内容 (self = true)
-// 5. 如果以上参数都没有，则为请求不经过筛选的公共内容
+// 3. search : 搜索标题含特定字符串的内容 (tag = {searchStr})
+// 4. follow : 当前用户关注的所有用户的内容 (follow = true)
+// 5. self : 当前用户自己发的内容 (self = true)
+// 6. history : 获取自己的观看记录 (history = true)
+// 7. 如果以上参数都没有，则为请求不经过筛选的公共内容
 // 以下参数与上面的参数兼容
 // 1. orderBy : viewNum / time ，默认 time
 // 2. order : asc / desc ，默认 desc
@@ -24,8 +26,10 @@ import (
 func GetContents(c *gin.Context) {
 	tag := c.Query("tag")
 	username := c.Query("user")
+	search := c.Query("search")
 	follow := c.DefaultQuery("follow", "false")
 	self := c.DefaultQuery("self", "false")
+	history := c.DefaultQuery("history", "false")
 
 	orderBy := c.DefaultQuery("orderBy", "time")
 	if orderBy == "viewNum" {
@@ -62,17 +66,17 @@ func GetContents(c *gin.Context) {
 	var contents []model.BriefContent
 	// var err error
 
-	if tag == "" && username == "" && follow == "false" && self == "false" {
+	if tag == "" && username == "" && search == "" && follow == "false" && self == "false" && history == "false" {
 		/* 公共内容 */
 		contents = model.QueryContents("public", "_", orderBy, order, num)
-	} else if tag != "" && username == "" && follow == "false" && self == "false" {
+	} else if tag != "" && username == "" && search == "" && follow == "false" && self == "false" && history == "false" {
 		/* 指定tag */
 		contents = model.QueryContents("tag", tag, orderBy, order, num)
-	} else if tag == "" && username != "" && follow == "false" && self == "false" {
+	} else if tag == "" && username != "" && search == "" && follow == "false" && self == "false" && history == "false" {
 		/* 指定user */
 		userID, _ := model.QueryUserIDWithName(username)
 		contents = model.QueryContents("user", userID, orderBy, order, num)
-	} else if tag == "" && username == "" && follow == "true" && self == "false" {
+	} else if tag == "" && username == "" && search == "" && follow == "true" && self == "false" && history == "false" {
 		/* 我关注的 */
 		// 获得已登录用户的 userID
 		loginUserID, err := GetUserIDByAuth(c)
@@ -80,7 +84,7 @@ func GetContents(c *gin.Context) {
 			return
 		}
 		contents = model.QueryContents("follow", loginUserID, orderBy, order, num)
-	} else if tag == "" && username == "" && follow == "false" && self == "true" {
+	} else if tag == "" && username == "" && search == "" && follow == "false" && self == "true" && history == "false" {
 		/* 我的 */
 		// 获得已登录用户的 userID
 		loginUserID, err := GetUserIDByAuth(c)
@@ -88,6 +92,17 @@ func GetContents(c *gin.Context) {
 			return
 		}
 		contents = model.QueryContents("user", loginUserID, orderBy, order, num)
+	} else if tag == "" && username == "" && search == "" && follow == "false" && self == "false" && history == "true" {
+		/* 我的浏览记录 */
+		// 获得已登录用户的 userID
+		loginUserID, err := GetUserIDByAuth(c)
+		if err != nil {
+			return
+		}
+		contents = model.QueryContents("history", loginUserID, "_", "_", num)
+	} else if tag == "" && username == "" && search != "" && follow == "false" && self == "false" && history == "false" {
+		/* 搜索 */
+		contents = model.QueryContents("search", search, orderBy, order, num)
 	} else {
 		/* 其他 */
 		c.JSON(http.StatusBadRequest, gin.H{
