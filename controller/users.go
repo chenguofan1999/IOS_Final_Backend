@@ -211,3 +211,18 @@ func AddTagForCurrentUser(c *gin.Context) {
 		"status": "success",
 	})
 }
+
+// GetTagsForCurrentUser 获取已登录用户的 tags
+func GetTagsForCurrentUser(c *gin.Context) {
+	// 获得已登录用户的 userID
+	loginUserID, err := GetUserIDByAuth(c)
+	if err != nil {
+		return
+	}
+
+	tags, _ := model.QueryTagsWithUserID(loginUserID)
+	c.JSON(http.StatusOK, gin.H{
+		"status": "success",
+		"data":   tags,
+	})
+}

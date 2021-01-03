@@ -64,7 +64,7 @@ func QueryReplyWithReplyID(currentUserID int, replyID int) *Reply {
 	return reply
 }
 
-// QueryRepliesWithCommentID 查询一条 comment 的所有回复, 如果没有则返回空切片
+// QueryReplies 查询一条 comment 的所有回复, 如果没有则返回空切片
 func QueryReplies(currentUserID int, commentID int, orderBy string, order string) []Reply {
 	if !CheckCommentExist(commentID) {
 		return []Reply{}

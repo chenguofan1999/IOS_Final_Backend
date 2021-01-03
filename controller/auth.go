@@ -64,7 +64,7 @@ func SignUp(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"status": "succeed"})
+	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }
 
 // Login : 登录, 应传入一个对应 loginInfo 的 JSON
@@ -95,7 +95,7 @@ func Login(c *gin.Context) {
 	if expected != "" && info.Password == expected {
 		tokenString := GetTokenByName(info.Username)
 		c.JSON(http.StatusOK, gin.H{
-			"status": "succeed",
+			"status": "success",
 			"token":  tokenString,
 		})
 	} else {
