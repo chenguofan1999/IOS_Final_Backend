@@ -10,8 +10,8 @@ func CreateLikeContentTableIfNotExists() {
 		user_id INT,
 		content_id INT,
 		PRIMARY KEY (user_id, content_id),
-		FOREIGN KEY (user_id) REFERENCES users(user_id),
-		FOREIGN KEY (content_id) REFERENCES contents(content_id)
+		FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+		FOREIGN KEY (content_id) REFERENCES contents(content_id) ON DELETE CASCADE
 		)ENGINE=InnoDB DEFAULT CHARSET=utf8; `
 
 	if _, err := DB.Exec(sql); err != nil {
@@ -93,5 +93,4 @@ func QueryLikeNumberWithUserID(userID int) (int, error) {
 
 	row.Scan(&num)
 	return num, nil
-
 }

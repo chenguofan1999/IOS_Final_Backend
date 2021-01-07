@@ -10,8 +10,8 @@ func CreateLikeReplyTableIfNotExists() {
 		user_id INT,
 		reply_id INT,
 		PRIMARY KEY (user_id, reply_id),
-		FOREIGN KEY (user_id) REFERENCES users(user_id),
-		FOREIGN KEY (reply_id) REFERENCES replies(reply_id)
+		FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+		FOREIGN KEY (reply_id) REFERENCES replies(reply_id) ON DELETE CASCADE
 		)ENGINE=InnoDB DEFAULT CHARSET=utf8; `
 
 	if _, err := DB.Exec(sql); err != nil {

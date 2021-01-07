@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"ios/model"
+	"math/rand"
 	"net/http"
 	"path"
 
@@ -142,8 +143,8 @@ func UpdateUserAvatar(c *gin.Context) {
 		return
 	}
 
-	// 检查图片大小不大于 1mb
-	if avatarFile.Size > (1 << 20) {
+	// 检查图片大小不大于 8mb
+	if avatarFile.Size > (8 << 20) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status": "failed",
 			"error":  "image file too big (> 1mb)",
@@ -152,8 +153,9 @@ func UpdateUserAvatar(c *gin.Context) {
 	}
 
 	// 文件路径 和 URL
-	filePath := fmt.Sprintf("/home/lighthouse/IOS_Files/avatars/user%d_avatar%s", loginUserID, suffix)
-	avatarURL := fmt.Sprintf("/static/avatars/user%d_avatar%s", loginUserID, suffix)
+	randomNumberSuffix := rand.Intn(1000)
+	filePath := fmt.Sprintf("/home/lighthouse/IOS_Files/avatars/user%d_avatar_%d%s", loginUserID, randomNumberSuffix, suffix)
+	avatarURL := fmt.Sprintf("/static/avatars/user%d_avatar_%d%s", loginUserID, randomNumberSuffix, suffix)
 
 	// 保存
 	if err := c.SaveUploadedFile(avatarFile, filePath); err != nil {
@@ -207,9 +209,41 @@ func AddTagForCurrentUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"status": "success",
-	})
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"status": "success",
+	// })
+	GetTagsForCurrentUser(c)
+}
+
+// DeleteTagForCurrentUser : 为当前用户删除一个 Tag, 请求体为 JSON 形式，包含 tag 字段
+func DeleteTagForCurrentUser(c *gin.Context) {
+	// 获得已登录用户的 userID
+	loginUserID, err := GetUserIDByAuth(c)
+	if err != nil {
+		return
+	}
+
+	var newTag tagFormat
+	if err := c.BindJSON(&newTag); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "failed",
+			"error":  "expect JSON: {tag}",
+		})
+		return
+	}
+
+	if err := model.DeleteUserTag(loginUserID, newTag.Tag); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "failed",
+			"error":  err.Error(),
+		})
+		return
+	}
+
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"status": "success",
+	// })
+	GetTagsForCurrentUser(c)
 }
 
 // GetTagsForCurrentUser 获取已登录用户的 tags

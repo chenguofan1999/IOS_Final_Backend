@@ -3,6 +3,7 @@ package model
 type BriefContent struct {
 	ContentID int       `json:"contentID"`
 	Title     string    `json:"title"`
+	Duration  int       `json:"duration"`
 	CoverURL  string    `json:"cover"`
 	Time      int64     `json:"createTime"`
 	ViewNum   int       `json:"viewNum"`
@@ -13,6 +14,7 @@ type DetailedContent struct {
 	ContentID   int       `json:"contentID"`
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
+	Duration    int       `json:"duration"`
 	Time        int64     `json:"createTime"`
 	VideoURL    string    `json:"video"`
 	User        *MiniUser `json:"user"`

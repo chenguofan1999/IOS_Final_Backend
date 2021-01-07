@@ -21,12 +21,14 @@ func InitRouter() *gin.Engine {
 	router.POST("/login", controller.Login)
 
 	// 用户信息
-	router.GET("/users/:username", controller.GetUserInfoByName) // 获取某用户详细信息
-	router.GET("/user", controller.GetSelfInfo)                  // 获取自己的用户信息
-	router.PUT("/user/bio", controller.UpdateUserBio)            // 更新自己的简介
-	router.PUT("/user/avatar", controller.UpdateUserAvatar)      // 更新自己的头像
-	router.GET("/user/tags", controller.GetTagsForCurrentUser)   // 为自己增加关注的 tag
-	router.POST("/user/tags", controller.AddTagForCurrentUser)   // 为自己增加关注的 tag
+	router.GET("/users/:username", controller.GetUserInfoByName)    // 获取某用户详细信息
+	router.GET("/user", controller.GetSelfInfo)                     // 获取自己的用户信息
+	router.PUT("/user/bio", controller.UpdateUserBio)               // 更新自己的简介
+	router.PUT("/user/avatar", controller.UpdateUserAvatar)         // 更新自己的头像
+	router.POST("/user/avatar", controller.UpdateUserAvatar)        // 更新自己的头像
+	router.GET("/user/tags", controller.GetTagsForCurrentUser)      // 为自己增加关注的 tag
+	router.POST("/user/tags", controller.AddTagForCurrentUser)      // 为自己增加关注的 tag
+	router.DELETE("/user/tags", controller.DeleteTagForCurrentUser) // 为自己删除关注的 tag
 
 	// 关注
 	router.GET("/users/:username/followers", controller.GetFollowersByUserID) // 获取某用户关注者
@@ -40,6 +42,8 @@ func InitRouter() *gin.Engine {
 	router.POST("/contents", controller.PostContent)                     // 发布内容
 	router.GET("/contents/:contentID", controller.GetContentByContentID) // 根据 contentID 获取某条内容的详细信息
 	router.DELETE("/contents/:contentID", controller.DeleteContent)      // 删除内容，仅能删除自己发出的内容
+	router.POST("/content/tags", controller.AddTagForContent)            // 为内容增加 tag , 仅能为自己发的内容增加标签
+	router.DELETE("/content/tags", controller.DeleteTagForContent)       // 为内容删除 tag , 仅能为自己发的内容删除标签
 	// Todo: POST /content
 
 	// Todo: PUT /content/:contentID (maybe)

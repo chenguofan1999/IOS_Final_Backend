@@ -18,7 +18,7 @@ func CreateContentTableIfNotExists() {
 		cover_url VARCHAR(255),
 		video_url VARCHAR(255),
 		PRIMARY KEY (content_id),
-		FOREIGN KEY (user_id) REFERENCES users(user_id)
+		FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 		)ENGINE=InnoDB DEFAULT CHARSET=utf8; `
 
 	if _, err := DB.Exec(sql); err != nil {
@@ -39,14 +39,14 @@ func CheckContentExist(contentID int) bool {
 }
 
 // InsertContent 插入一条 Content 记录，用户不存在或插入错误时返回错误
-func InsertContent(title string, description string, coverURL string, videoURL string, userID int) error {
+func InsertContent(title string, description string, coverURL string, videoURL string, userID int, duration int) error {
 	// 检查用户存在
 	if !CheckUserExist(userID) {
 		return errors.New("no such user")
 	}
 
-	_, err := DB.Exec(`insert into contents(user_id,title,description,create_time,cover_url,video_url)
-		values (?,?,?,?,?,?)`, userID, title, description, time.Now().Unix(), coverURL, videoURL)
+	_, err := DB.Exec(`insert into contents(user_id,title,description,create_time,cover_url,video_url,duration)
+		values (?,?,?,?,?,?,?)`, userID, title, description, time.Now().Unix(), coverURL, videoURL, duration)
 	if err != nil {
 		fmt.Println(err)
 		return errors.New("insert content failed")
@@ -65,10 +65,10 @@ func QueryBriefContentWithContentID(contentID int) *BriefContent {
 	content.ContentID = contentID
 	var userID int
 
-	row := DB.QueryRow(`select title, cover_url, create_time, user_id
+	row := DB.QueryRow(`select title, cover_url, create_time, user_id, duration
 		from contents where content_id = ?`, contentID)
 	// 已知 content 存在，Scan()不会返回错误
-	err := row.Scan(&content.Title, &content.CoverURL, &content.Time, &userID)
+	err := row.Scan(&content.Title, &content.CoverURL, &content.Time, &userID, &content.Duration)
 	// TODO: 确认功能无误后请删除 panic 代码以及上面的 err
 	if err != nil {
 		panic(err)
@@ -124,6 +124,13 @@ func QueryContents(mode string, specifier interface{}, orderBy string, order str
 		searchStr, _ := specifier.(string)
 		rows, err = DB.Query(`select content_id from contents 
 		where title like "%`+searchStr+`%" order by `+orderBy+` `+order+` limit ?`, num)
+	case "allTags":
+		rows, err = DB.Query(`select content_id from contents where content_id in 
+		(select content_id from user_tags natural join content_tags where user_id = ?) 
+		order by `+orderBy+` `+order+` limit ?`, specifier, num)
+	case "like":
+		rows, err = DB.Query(`select content_id from users natural join like_content join (contents natural left outer join view_num) using (content_id) 
+		where users.user_name = ? order by `+orderBy+` `+order+` limit ?`, specifier, num)
 	}
 
 	contents := make([]BriefContent, 0)
@@ -161,11 +168,11 @@ func QueryDetailedContent(currentUserID int, contentID int) *DetailedContent {
 	content := new(DetailedContent)
 	content.ContentID = contentID
 
-	row := DB.QueryRow(`select user_id, title, description, create_time, video_url 
+	row := DB.QueryRow(`select user_id, title, description, create_time, video_url, duration
 		from contents where content_id = ?`, contentID)
 
 	var userID int
-	row.Scan(&userID, &content.Title, &content.Description, &content.Time, &content.VideoURL)
+	row.Scan(&userID, &content.Title, &content.Description, &content.Time, &content.VideoURL, &content.Duration)
 
 	content.User = QueryMiniUserWithUserID(userID)
 	content.Liked, _ = QueryHasLikedContent(currentUserID, contentID)
@@ -189,7 +196,7 @@ func DeleteContentWithContentID(userID int, contentID int) error {
 	// 内容存在，因此 0 row affected 代表内容的发出者不是此用户
 	result, err := DB.Exec(`delete from contents where user_id = ? and content_id = ?`, userID, contentID)
 	if err != nil {
-		return errors.New("delete content failed")
+		return err
 	}
 
 	rowsAffected, _ := result.RowsAffected()
@@ -206,4 +213,14 @@ func QueryMaxContentID() int {
 	row := DB.QueryRow(`select max(content_id) from contents`)
 	row.Scan(&maxID)
 	return maxID
+}
+
+func QueryUserIDWithContentID(contentID int) (int, error) {
+	var userID int
+	row := DB.QueryRow(`select user_id from contents where content_id = ?`, contentID)
+	if err := row.Scan(&userID); err != nil {
+		return 0, errors.New("no such content")
+	}
+	return userID, nil
+
 }

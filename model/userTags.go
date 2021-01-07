@@ -10,7 +10,7 @@ func CreateUserTagsTableIfNotExists() {
 		user_id INT,
 		tag_name VARCHAR(32),
 		PRIMARY KEY (user_id, tag_name),
-		FOREIGN KEY (user_id) REFERENCES users(user_id)
+		FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 		)ENGINE=InnoDB DEFAULT CHARSET=utf8; `
 
 	if _, err := DB.Exec(sql); err != nil {

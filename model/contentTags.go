@@ -10,7 +10,7 @@ func CreateContentTagsTableIfNotExists() {
 		content_id INT,
 		tag_name VARCHAR(32),
 		PRIMARY KEY (content_id, tag_name),
-		FOREIGN KEY (content_id) REFERENCES contents(content_id)
+		FOREIGN KEY (content_id) REFERENCES contents(content_id) ON DELETE CASCADE
 		)ENGINE=InnoDB DEFAULT CHARSET=utf8; `
 
 	if _, err := DB.Exec(sql); err != nil {
