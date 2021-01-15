@@ -122,8 +122,11 @@ func QueryContents(mode string, specifier interface{}, orderBy string, order str
 		rows, err = DB.Query(`select content_id from history where user_id = ? order by view_time desc limit ?`, specifier, num)
 	case "search":
 		searchStr, _ := specifier.(string)
-		rows, err = DB.Query(`select content_id from contents 
-		where title like "%`+searchStr+`%" order by `+orderBy+` `+order+` limit ?`, num)
+		rows, err = DB.Query(`select content_id from contents natural join users
+		where title like "%`+searchStr+`%" 
+		or user_name like "%`+searchStr+`%"
+		or description like "%`+searchStr+`%"
+		order by `+orderBy+` `+order+` limit ?`, num)
 	case "allTags":
 		rows, err = DB.Query(`select content_id from contents where content_id in 
 		(select content_id from user_tags natural join content_tags where user_id = ?) 

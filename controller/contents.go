@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"ios/model"
+	"math/rand"
 	"net/http"
 	"path"
 	"strconv"
@@ -302,11 +303,12 @@ func PostContent(c *gin.Context) {
 	}
 
 	// 生成文件路径 和 URL
+	randomNumberSuffix := rand.Intn(1000)
 	predictedContentID := model.QueryMaxContentID() + 1
-	videoPath := fmt.Sprintf("/home/lighthouse/IOS_Files/videos/content%d_video%s", predictedContentID, videoSuffix)
-	coverPath := fmt.Sprintf("/home/lighthouse/IOS_Files/covers/content%d_cover%s", predictedContentID, coverSuffix)
-	videoURL := fmt.Sprintf("/static/videos/content%d_video%s", predictedContentID, videoSuffix)
-	coverURL := fmt.Sprintf("/static/covers/content%d_cover%s", predictedContentID, coverSuffix)
+	videoPath := fmt.Sprintf("/home/lighthouse/IOS_Files/videos/content%d_video%d%s", predictedContentID, randomNumberSuffix, videoSuffix)
+	coverPath := fmt.Sprintf("/home/lighthouse/IOS_Files/covers/content%d_cover%d%s", predictedContentID, randomNumberSuffix, coverSuffix)
+	videoURL := fmt.Sprintf("/static/videos/content%d_video%d%s", predictedContentID, randomNumberSuffix, videoSuffix)
+	coverURL := fmt.Sprintf("/static/covers/content%d_cover%d%s", predictedContentID, randomNumberSuffix, coverSuffix)
 
 	// 保存到服务器
 	if err := c.SaveUploadedFile(videoFile, videoPath); err != nil {
