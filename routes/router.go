@@ -26,9 +26,9 @@ func InitRouter() *gin.Engine {
 	router.PUT("/user/bio", controller.UpdateUserBio)               // 更新自己的简介
 	router.PUT("/user/avatar", controller.UpdateUserAvatar)         // 更新自己的头像
 	router.POST("/user/avatar", controller.UpdateUserAvatar)        // 更新自己的头像
-	router.GET("/user/tags", controller.GetTagsForCurrentUser)      // 为自己增加关注的 tag
-	router.POST("/user/tags", controller.AddTagForCurrentUser)      // 为自己增加关注的 tag
-	router.DELETE("/user/tags", controller.DeleteTagForCurrentUser) // 为自己删除关注的 tag
+	router.GET("/user/tags", controller.GetTagsForCurrentUser)      // 为自己增加关注的 tag
+	router.POST("/user/tags", controller.AddTagForCurrentUser)      // 为自己增加关注的 tag
+	router.DELETE("/user/tags", controller.DeleteTagForCurrentUser) // 为自己删除关注的 tag
 
 	// 关注
 	router.GET("/users/:username/followers", controller.GetFollowersByUserID) // 获取某用户关注者
